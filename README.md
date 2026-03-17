@@ -22,7 +22,7 @@
 
 ```text
 请按照这个 SKILL.md 帮我完成 Star Office UI 的部署：
-https://github.com/ringhyacinth/Star-Office-UI/blob/master/SKILL.md
+https://github.com/bob5-tensorslab/Star-Office-UI/blob/master/SKILL.md
 ```
 
 龙虾会自动完成 clone、安装依赖、启动后端、配置状态同步，并把访问地址发给你。
@@ -33,7 +33,7 @@ https://github.com/ringhyacinth/Star-Office-UI/blob/master/SKILL.md
 
 ```bash
 # 1) 下载仓库
-git clone https://github.com/ringhyacinth/Star-Office-UI.git
+git clone https://github.com/bob5-tensorslab/Star-Office-UI.git
 cd Star-Office-UI
 
 # 2) 安装依赖（需要 Python 3.10+）
@@ -291,5 +291,9 @@ Star-Office-UI/
 ---
 
 ## ⭐ Star History
+
+> 🎉 **特别声明与致谢 / Acknowledgement**
+> 本项目 Fork 自 [ringhyacinth/Star-Office-UI](https://github.com/ringhyacinth/Star-Office-UI)。
+> 特别感谢原作者 [Ring Hyacinth](https://x.com/ring_hyacinth) 与 [Simon Lee](https://x.com/simonxxoo) 提供的精彩创意与优秀代码基座！
 
 [![Star History Chart](https://api.star-history.com/image?repos=ringhyacinth/Star-Office-UI&type=date&legend=top-left)](https://www.star-history.com/?repos=ringhyacinth%2FStar-Office-UI&type=date&legend=top-left)

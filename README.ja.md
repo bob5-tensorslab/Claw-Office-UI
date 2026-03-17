@@ -22,7 +22,7 @@
 
 ```text
 この SKILL.md に従って Star Office UI をデプロイしてください：
-https://github.com/ringhyacinth/Star-Office-UI/blob/master/SKILL.md
+https://github.com/bob5-tensorslab/Star-Office-UI/blob/master/SKILL.md
 ```
 
 ロブスターが自動的にリポジトリのクローン、依存関係のインストール、バックエンドの起動、ステータス同期の設定を行い、アクセス URL をお知らせします。
@@ -33,7 +33,7 @@ https://github.com/ringhyacinth/Star-Office-UI/blob/master/SKILL.md
 
 ```bash
 # 1) リポジトリをクローン
-git clone https://github.com/ringhyacinth/Star-Office-UI.git
+git clone https://github.com/bob5-tensorslab/Star-Office-UI.git
 cd Star-Office-UI
 
 # 2) 依存関係をインストール（Python 3.10+ が必要）
@@ -290,5 +290,9 @@ Star-Office-UI/
 ---
 
 ## ⭐ Star History
+
+> 🎉 **謝辞 / Acknowledgement**
+> 本プロジェクトは [ringhyacinth/Star-Office-UI](https://github.com/ringhyacinth/Star-Office-UI) をフォークしたものです。
+> 素晴らしいアイデアと優れたコードベースを提供してくれた原作者の [Ring Hyacinth](https://x.com/ring_hyacinth) と [Simon Lee](https://x.com/simonxxoo) に心から感謝します！
 
 [![Star History Chart](https://api.star-history.com/image?repos=ringhyacinth/Star-Office-UI&type=date&legend=top-left)](https://www.star-history.com/?repos=ringhyacinth%2FStar-Office-UI&type=date&legend=top-left)

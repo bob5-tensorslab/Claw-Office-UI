@@ -22,7 +22,7 @@ If you're using [OpenClaw](https://github.com/openclaw/openclaw), just send this
 
 ```text
 Please follow this SKILL.md to deploy Star Office UI for me:
-https://github.com/ringhyacinth/Star-Office-UI/blob/master/SKILL.md
+https://github.com/bob5-tensorslab/Star-Office-UI/blob/master/SKILL.md
 ```
 
 Your lobster will automatically clone the repo, install dependencies, start the backend, configure status sync, and send you the access URL.
@@ -33,7 +33,7 @@ Your lobster will automatically clone the repo, install dependencies, start the 
 
 ```bash
 # 1) Clone the repo
-git clone https://github.com/ringhyacinth/Star-Office-UI.git
+git clone https://github.com/bob5-tensorslab/Star-Office-UI.git
 cd Star-Office-UI
 
 # 2) Install dependencies (Python 3.10+ required)
@@ -290,5 +290,9 @@ Star-Office-UI/
 ---
 
 ## ⭐ Star History
+
+> 🎉 **Acknowledgement**
+> This project is a fork of [ringhyacinth/Star-Office-UI](https://github.com/ringhyacinth/Star-Office-UI).
+> Special thanks to the original creators [Ring Hyacinth](https://x.com/ring_hyacinth) and [Simon Lee](https://x.com/simonxxoo) for their brilliant ideas and excellent codebase!
 
 [![Star History Chart](https://api.star-history.com/image?repos=ringhyacinth/Star-Office-UI&type=date&legend=top-left)](https://www.star-history.com/?repos=ringhyacinth%2FStar-Office-UI&type=date&legend=top-left)
