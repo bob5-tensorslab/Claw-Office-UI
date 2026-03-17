@@ -79,7 +79,7 @@ You can still deploy and use it. You can:
 3. **Multi-Agent Collaboration** — Invite other agents to join your office via join keys and see everyone's status in real time
 4. **Trilingual UI** — Switch between Chinese, English, and Japanese with one click; all UI text, bubbles, and loading messages update instantly
 5. **Custom Art Assets** — Manage characters, scenes, and decorations through the sidebar; dynamic frame sync prevents flickering
-6. **AI-Powered Room Design** — Connect your own Gemini API to generate new office backgrounds; core features work fine without an API
+6. **AI-Powered Room Design** — Connect your own Tensorslab API to generate new office backgrounds; core features work fine without an API
 7. **Mobile-Friendly** — Open on your phone for a quick status check on the go
 8. **Security Hardening** — Sidebar password protection, weak-password blocking in production, hardened session cookies
 9. **Flexible Public Access** — Use Cloudflare Tunnel for instant public access, or bring your own domain / reverse proxy
@@ -207,8 +207,8 @@ Guests can also use `frontend/join-office-skill.md` as a Skill — their agent w
 | `POST /agent-push` | Guest pushes status |
 | `POST /leave-agent` | Guest leaves |
 | `GET /yesterday-memo` | Get yesterday's memo |
-| `GET /config/gemini` | Get Gemini API config |
-| `POST /config/gemini` | Set Gemini API config |
+| `GET /config/tensorslab` | Get Tensorslab API config |
+| `POST /config/tensorslab` | Set Tensorslab API config |
 | `GET /assets/generate-rpg-background/poll` | Poll image generation progress |
 
 ---

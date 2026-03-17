@@ -37,9 +37,7 @@ def main():
     # Resolve API key
     api_key = os.environ.get("TENSORSLAB_API_KEY", "").strip()
     if not api_key:
-        api_key = os.environ.get("GEMINI_API_KEY", "").strip()
-    if not api_key:
-        print("ERROR: TENSORSLAB_API_KEY or GEMINI_API_KEY not set", file=sys.stderr)
+        print("ERROR: TENSORSLAB_API_KEY not set", file=sys.stderr)
         sys.exit(1)
 
     # Resolve model

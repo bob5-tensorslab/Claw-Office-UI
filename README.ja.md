@@ -79,7 +79,7 @@ python3 set_state.py idle "待機中"
 3. **マルチ Agent 協調** —— join key で他の Agent をオフィスに招待し、全員のステータスをリアルタイム確認
 4. **中英日 3 言語対応** —— CN / EN / JP をワンクリック切替、UI テキスト・吹き出し・ローディング表示すべてが連動
 5. **アート資産カスタマイズ** —— サイドバーからキャラクター / 背景 / 装飾素材を管理、動的フレーム同期でちらつき防止
-6. **AI 画像生成による模様替え** —— Gemini API を接続してオフィス背景を AI 生成; API 未接続でもコア機能は利用可能
+6. **AI 画像生成による模様替え** —— Tensorslab API を接続してオフィス背景を AI 生成; API 未接続でもコア機能は利用可能
 7. **モバイル対応** —— スマホからそのまま閲覧可能、外出先からのクイックチェックに最適
 8. **セキュリティ強化** —— サイドバーのパスワード保護、本番環境での弱パスワード拒否、Session Cookie 強化
 9. **柔軟な公開アクセス** —— Cloudflare Tunnel でワンステップ公開、独自ドメイン / リバースプロキシにも対応
@@ -207,8 +207,8 @@ python3 office-agent-push.py
 | `POST /agent-push` | ゲストステータスプッシュ |
 | `POST /leave-agent` | ゲスト退出 |
 | `GET /yesterday-memo` | 昨日メモ取得 |
-| `GET /config/gemini` | Gemini API 設定取得 |
-| `POST /config/gemini` | Gemini API 設定変更 |
+| `GET /config/tensorslab` | Tensorslab API 設定取得 |
+| `POST /config/tensorslab` | Tensorslab API 設定変更 |
 | `GET /assets/generate-rpg-background/poll` | 画像生成の進捗確認 |
 
 ---

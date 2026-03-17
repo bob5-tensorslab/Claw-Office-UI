@@ -80,7 +80,7 @@ python3 set_state.py idle "待命中"
 3. **多 Agent 协作** —— 通过 join key 邀请其他 Agent 加入你的办公室，实时查看多人状态
 4. **中英日三语** —— CN / EN / JP 一键切换，界面文案、气泡、加载提示全部联动
 5. **美术资产自定义** —— 侧边栏管理角色 / 场景 / 装饰素材，支持动态帧同步，避免闪烁
-6. **AI 生图装修** —— 接入 Gemini API，用 AI 给办公室换背景；不接入 API 也能正常使用核心功能
+6. **AI 生图装修** —— 接入 Tensorslab API，用 AI 给办公室换背景；不接入 API 也能正常使用核心功能
 7. **移动端适配** —— 手机直接打开即可查看，适合外出时快速瞄一眼
 8. **安全加固** —— 侧边栏密码保护、生产环境弱密码拦截、Session Cookie 加固
 9. **灵活公网访问** —— 推荐 Cloudflare Tunnel 一键公网化，也可用自有域名 / 反向代理
@@ -208,8 +208,8 @@ python3 office-agent-push.py
 | `POST /agent-push` | 访客推送状态 |
 | `POST /leave-agent` | 访客离开 |
 | `GET /yesterday-memo` | 获取昨日小记 |
-| `GET /config/gemini` | 获取 Gemini API 配置 |
-| `POST /config/gemini` | 设置 Gemini API 配置 |
+| `GET /config/tensorslab` | 获取 Tensorslab API 配置 |
+| `POST /config/tensorslab` | 设置 Tensorslab API 配置 |
 | `GET /assets/generate-rpg-background/poll` | 轮询生图进度 |
 
 ---

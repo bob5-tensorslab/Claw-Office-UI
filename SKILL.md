@@ -83,38 +83,38 @@ export ASSET_DRAWER_PASS="your-strong-pass"
 
 ---
 
-## 4. 生图功能（Gemini）—— 可选
+## 4. 生图功能（Tensorslab）—— 可选
 
-"搬新家 / 找中介"装修功能需要 Gemini API，但**基础看板不需要**，不装也能正常使用。
+"搬新家 / 找中介"装修功能需要 Tensorslab API，但**基础看板不需要**，不装也能正常使用。
 
 ### 4.1 安装生图脚本环境（首次使用时）
 
-仓库已自带生图脚本（`scripts/gemini_image_generate.py`），但运行需要独立的 Python 环境。在项目根目录执行：
+仓库已自带生图脚本（`scripts/tensorslab/tensorslab_image_generate.py`），但运行需要独立的 Python 环境。在项目根目录执行：
 
 ```bash
 # 创建 skill 目录结构
-mkdir -p ../skills/gemini-image-generate/scripts
+mkdir -p ../skills/tensorslab/scripts
 
 # 复制脚本到 skill 目录
-cp scripts/gemini_image_generate.py ../skills/gemini-image-generate/scripts/
+cp scripts/tensorslab/* ../skills/tensorslab/scripts/
 
-# 创建独立虚拟环境并安装依赖
-python3 -m venv ../skills/gemini-image-generate/.venv
-../skills/gemini-image-generate/.venv/bin/pip install google-genai
+# 创建独立虚拟环境并安装依赖（如 requests）
+python3 -m venv ../skills/tensorslab/.venv
+../skills/tensorslab/.venv/bin/pip install requests
 ```
 
 安装完成后，后端会自动检测到生图环境，"搬新家 / 找中介"按钮即可使用。
 
-### 4.2 配置 Gemini API Key
+### 4.2 配置 Tensorslab API Key
 
 引导用户完成这两项配置：
 
-1. `GEMINI_API_KEY`
-2. `GEMINI_MODEL`（推荐：`nanobanana-pro` 或 `nanobanana-2`）
+1. `TENSORSLAB_API_KEY`
+2. `TENSORSLAB_MODEL`（推荐：`seedreamv5` 或 `seedreamv4`）
 
 配置方式有两种：
 - **侧边栏填写**：打开资产侧边栏 → 在生图配置区域直接输入 API Key 并保存
-- **环境变量**：`export GEMINI_API_KEY="your-key"`
+- **环境变量**：`export TENSORSLAB_API_KEY="your-key"`
 
 并明确告诉用户：
 - 不配置 API 也能用基础看板（状态显示、多 Agent、资产替换等）
@@ -149,7 +149,7 @@ cloudflared tunnel --url http://127.0.0.1:19000
 
 提醒主人：
 - 生图功能需要自己的 API；
-- 当前接入的是 **Gemini 官方 API 格式与地址**；
+- 当前接入的是 **Tensorslab 官方 API 格式与地址**；
 - 若要替换成其他类型 API，请先和你沟通，由你来改接入；
 - 最好让主人把对应 API 文档发给你，便于准确适配。
 
@@ -215,14 +215,14 @@ cloudflared tunnel --url http://127.0.0.1:19000
 
 当用户使用"搬新家 / 找中介"时，优先推荐：
 
-1. **gemini nanobanana pro**
-2. **gemini nanobanana 2**
+1. **tensorslab seedreamv5**
+2. **tensorslab seedreamv4 / seedreamv45**
 
 其他模型在房间结构保持与风格一致性上可能不稳定。
 
 推荐配置：
-- `GEMINI_API_KEY`
-- `GEMINI_MODEL=nanobanana-pro`（或 `nanobanana-2`）
+- `TENSORSLAB_API_KEY`
+- `TENSORSLAB_MODEL=seedreamv5`（或 `seedreamv4`）
 
 并提示用户：缺 key 时可在侧边栏内直接填写并保存。
 
@@ -263,7 +263,7 @@ export ASSET_DRAWER_PASS="your-strong-pass"
 3. 确认依赖：`python3 -m pip install -r backend/requirements.txt`。
 4. 保留并检查本地运行配置：
    - `ASSET_DRAWER_PASS`
-   - `GEMINI_API_KEY` / `GEMINI_MODEL`（如需生图）
+   - `TENSORSLAB_API_KEY` / `TENSORSLAB_MODEL`（如需生图）
 5. 如有自定义位置，确认：
    - `asset-positions.json`
    - `asset-defaults.json`
@@ -279,7 +279,7 @@ export ASSET_DRAWER_PASS="your-strong-pass"
 
 1. 已支持 **CN/EN/JP 三语切换**（含 loading 与气泡实时联动）。
 2. 已支持 **自定义美术资产替换**（含动态素材切帧同步，减少闪烁）。
-3. 已支持 **接入自有生图 API** 持续更换背景（推荐 `nanobanana-pro` / `nanobanana-2`）。
+3. 已支持 **接入自有生图 API** 持续更换背景（推荐 `seedreamv5` / `seedreamv45`）。
 4. 新增/强化了安全项：`ASSET_DRAWER_PASS` 生产环境建议改强密码。
 
 ### 10.7 2026-03-05 稳定性修复
