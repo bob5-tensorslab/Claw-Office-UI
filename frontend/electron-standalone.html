@@ -749,8 +749,8 @@
         .home-fav-meta { color:#9ca3af; font-size:10px; margin-top:4px; line-height:1.3; min-height:24px; }
         .home-fav-item button { width:100%; margin-top:4px; border:1px solid #4b5563; background:#1f2937; color:#fff; border-radius:6px; padding:4px 6px; font-family:'ArkPixel', monospace; cursor:pointer; }
         .home-fav-item button:hover { border-color:#22c55e; }
-        #gemini-api-doc-link { color:#86efac; text-decoration: underline; text-underline-offset: 2px; }
-        #gemini-api-doc-link:hover { color:#bbf7d0; }
+        #tensorslab-api-doc-link { color:#86efac; text-decoration: underline; text-underline-offset: 2px; }
+        #tensorslab-api-doc-link:hover { color:#bbf7d0; }
 
 
         #asset-move-panel { border:1px solid #334155; background:#0b1220; border-radius:10px; padding:10px; margin-bottom:10px; }
@@ -1692,20 +1692,20 @@
                         <textarea id="asset-broker-prompt" placeholder="例如：像素风赛博东京夜景，霓虹灯、雨夜地面反光、蓝紫主色"></textarea>
                         <div class="asset-toolbar" style="margin-top:6px; gap:8px; align-items:center; justify-content:flex-start;">
                             <span id="speed-mode-label" class="asset-sub" style="min-width:62px;">生成模式</span>
-                            <button id="speed-fast-btn" type="button" onclick="setSpeedMode('fast')" style="background:#22c55e;color:#052e16;border-color:#16a34a;">🍌2</button>
-                            <button id="speed-quality-btn" type="button" onclick="setSpeedMode('quality')" style="background:#334155;color:#e5e7eb;border-color:#475569;">🍌Pro</button>
+                            <button id="speed-fast-btn" type="button" onclick="setSpeedMode('fast')" style="background:#22c55e;color:#052e16;border-color:#16a34a;">✨v4</button>
+                            <button id="speed-quality-btn" type="button" onclick="setSpeedMode('quality')" style="background:#334155;color:#e5e7eb;border-color:#475569;">✨v5</button>
                         </div>
-                        <details id="asset-gemini-panel" style="margin-top:6px; border:1px dashed #334155; border-radius:8px; padding:8px; background:#0b1220;">
-                            <summary id="gemini-panel-summary" style="cursor:pointer; color:#cbd5e1;">🔐 API 设置（可折叠）</summary>
-                            <div id="asset-gemini-config" style="display:block; margin-top:6px;">
-                                <div id="gemini-config-hint" class="asset-sub" style="margin-bottom:4px;">可选：填写你的生图 API Key（留空不影响基础功能）</div>
-                                <div class="asset-sub" style="margin-bottom:6px;"><a id="gemini-api-doc-link" href="https://ai.google.dev/gemini-api/docs/api-key?hl=zh-cn" target="_blank" rel="noopener noreferrer">📘 如何申请 Google API Key</a></div>
-                                <div id="gemini-mask-status" class="asset-sub" style="margin-bottom:6px; color:#a7f3d0;"></div>
+                        <details id="asset-tensorslab-panel" style="margin-top:6px; border:1px dashed #334155; border-radius:8px; padding:8px; background:#0b1220;">
+                            <summary id="tensorslab-panel-summary" style="cursor:pointer; color:#cbd5e1;">🔐 API 设置（可折叠）</summary>
+                            <div id="asset-tensorslab-config" style="display:block; margin-top:6px;">
+                                <div id="tensorslab-config-hint" class="asset-sub" style="margin-bottom:4px;">可选：填写你的生图 API Key（留空不影响基础功能）</div>
+                                <div class="asset-sub" style="margin-bottom:6px;"><a id="tensorslab-api-doc-link" href="https://tensorai.tensorslab.com/" target="_blank" rel="noopener noreferrer">📘 获取 Tensorslab API Key</a></div>
+                                <div id="tensorslab-mask-status" class="asset-sub" style="margin-bottom:6px; color:#a7f3d0;"></div>
                                 <div class="asset-toolbar" style="gap:6px; flex-wrap:wrap;">
-                                    <input id="gemini-api-key-input" type="password" placeholder="粘贴 GEMINI_API_KEY（不会回显）" style="min-width:220px; flex:1;" autocomplete="new-password" />
-                                    <button id="btn-save-gemini-key" onclick="saveGeminiConfigFromUI()">保存 Key</button>
+                                    <input id="tensorslab-api-key-input" type="password" placeholder="粘贴 TENSORSLAB_API_KEY（不会回显）" style="min-width:220px; flex:1;" autocomplete="new-password" />
+                                    <button id="btn-save-tensorslab-key" onclick="saveTensorslabConfigFromUI()">保存 Key</button>
                                 </div>
-                                <div id="gemini-config-msg" class="asset-sub" style="margin-top:4px;"></div>
+                                <div id="tensorslab-config-msg" class="asset-sub" style="margin-top:4px;"></div>
                             </div>
                         </details>
                         <div id="asset-broker-actions">
@@ -1785,9 +1785,9 @@
                 brokerGenerating: '🏘️ 正在按中介方案生成底图，请稍候（约20-90秒）...',
                 brokerDone: '✅ 已按中介方案生成并替换底图，正在刷新房间...',
                 moveSuccess: '✅ 搬家成功！',
-                brokerMissingKey: '❌ 生图失败：缺少 GEMINI API Key，请在下方填写并保存后重试',
-                geminiPanelTitle: '🔐 API 设置（可折叠）', geminiHint: '可选：填写你的生图 API Key（留空不影响基础功能）', geminiApiDoc: '📘 如何申请 Google API Key', geminiInputPh: '粘贴 GEMINI_API_KEY（不会回显）', geminiSaveKey: '保存 Key', geminiMaskNoKey: '当前状态：未配置 Key', geminiMaskHasKey: '当前已配置：',
-                speedModeLabel: '生成模式', speedFast: '🍌2', speedQuality: '🍌Pro',
+                brokerMissingKey: '❌ 生图失败：缺少 Tensorslab API Key，请在下方填写并保存后重试',
+                tensorslabPanelTitle: '🔐 API 设置（可折叠）', tensorslabHint: '可选：填写你的生图 API Key（留空不影响基础功能）', tensorslabApiDoc: '📘 获取 Tensorslab API Key', tensorslabInputPh: '粘贴 TENSORSLAB_API_KEY（不会回显）', tensorslabSaveKey: '保存 Key', tensorslabMaskNoKey: '当前状态：未配置 Key', tensorslabMaskHasKey: '当前已配置：',
+                speedModeLabel: '生成模式', speedFast: '✨v4', speedQuality: '✨v5',
                 searchPlaceholder: '搜索资产名（如 desk / sofa / star）', loaded: '已加载', allAssets: '全部资产',
                 chooseImage: '上传替换素材', confirmUpload: '确认并刷新', uploadPending: '待上传', uploadTarget: '目标',
                 assetHintNotInScene: '当前场景未检测到此对象，仍可替换文件（刷新后生效）',
@@ -1819,9 +1819,9 @@
                 brokerGenerating: '🏘️ Generating room background from broker plan, please wait (20-90s)...',
                 brokerDone: '✅ Broker plan applied and background replaced, refreshing room...',
                 moveSuccess: '✅ Move successful!',
-                brokerMissingKey: '❌ Generation failed: missing GEMINI API key. Fill it below and retry.',
-                geminiPanelTitle: '🔐 API Settings (collapsible)', geminiHint: 'Optional: set your image API key (base features work without it)', geminiApiDoc: '📘 How to get a Google API Key', geminiInputPh: 'Paste GEMINI_API_KEY (input hidden)', geminiSaveKey: 'Save Key', geminiMaskNoKey: 'Current: no key configured', geminiMaskHasKey: 'Configured key:',
-                speedModeLabel: 'Render Mode', speedFast: '🍌2', speedQuality: '🍌Pro',
+                brokerMissingKey: '❌ Generation failed: missing Tensorslab API key. Fill it below and retry.',
+                tensorslabPanelTitle: '🔐 API Settings (collapsible)', tensorslabHint: 'Optional: set your image API key (base features work without it)', tensorslabApiDoc: '📘 How to get a Tensorslab API Key', tensorslabInputPh: 'Paste TENSORSLAB_API_KEY (input hidden)', tensorslabSaveKey: 'Save Key', tensorslabMaskNoKey: 'Current: no key configured', tensorslabMaskHasKey: 'Configured key:',
+                speedModeLabel: 'Render Mode', speedFast: '✨v4', speedQuality: '✨v5',
                 searchPlaceholder: 'Search assets (desk / sofa / star)', loaded: 'Loaded', allAssets: 'All Assets',
                 chooseImage: 'Upload Replacement Asset', confirmUpload: 'Confirm & Refresh', uploadPending: 'Pending Upload', uploadTarget: 'Target',
                 assetHintNotInScene: 'This object is not detected in current scene; you can still replace file (effective after refresh)',
@@ -1853,9 +1853,9 @@
                 brokerGenerating: '🏘️ 仲介プランで背景を生成中（20〜90秒）...',
                 brokerDone: '✅ 仲介プランを適用して背景を更新しました。部屋を更新中...',
                 moveSuccess: '✅ 引っ越し成功！',
-                brokerMissingKey: '❌ 生成失敗：GEMINI APIキーが未設定です。下で入力して保存してください。',
-                geminiPanelTitle: '🔐 API設定（折りたたみ）', geminiHint: '任意：画像生成APIキーを設定（未設定でも基本機能は利用可）', geminiApiDoc: '📘 Google API Keyの取得方法', geminiInputPh: 'GEMINI_API_KEY を貼り付け（入力は非表示）', geminiSaveKey: 'Keyを保存', geminiMaskNoKey: '現在：キー未設定', geminiMaskHasKey: '設定済みキー：',
-                speedModeLabel: '生成モード', speedFast: '🍌2', speedQuality: '🍌Pro',
+                brokerMissingKey: '❌ 生成失敗：Tensorslab APIキーが未設定です。下で入力して保存してください。',
+                tensorslabPanelTitle: '🔐 API設定（折りたたみ）', tensorslabHint: '任意：画像生成APIキーを設定（未設定でも基本機能は利用可）', tensorslabApiDoc: '📘 Tensorslab API Keyの取得方法', tensorslabInputPh: 'TENSORSLAB_API_KEY を貼り付け（入力は非表示）', tensorslabSaveKey: 'Keyを保存', tensorslabMaskNoKey: '現在：キー未設定', tensorslabMaskHasKey: '設定済みキー：',
+                speedModeLabel: '生成モード', speedFast: '✨v4', speedQuality: '✨v5',
                 searchPlaceholder: 'アセット検索（desk / sofa / star）', loaded: '読み込み済み', allAssets: '全アセット',
                 chooseImage: '差し替え素材をアップロード', confirmUpload: '確定して更新', uploadPending: 'アップロード待ち', uploadTarget: '対象',
                 assetHintNotInScene: '現在のシーンでこのオブジェクトは未検出です。ファイル差し替えは可能（更新後に反映）',
@@ -2021,11 +2021,11 @@
             const speedLbl = document.getElementById('speed-mode-label'); if (speedLbl) speedLbl.textContent = t('speedModeLabel');
             const speedFastBtn = document.getElementById('speed-fast-btn'); if (speedFastBtn) speedFastBtn.textContent = t('speedFast');
             const speedQualityBtn = document.getElementById('speed-quality-btn'); if (speedQualityBtn) speedQualityBtn.textContent = t('speedQuality');
-            const geminiPanelSummary = document.getElementById('gemini-panel-summary'); if (geminiPanelSummary) geminiPanelSummary.textContent = t('geminiPanelTitle');
-            const geminiHint = document.getElementById('gemini-config-hint'); if (geminiHint) geminiHint.textContent = t('geminiHint');
-            const geminiDocLink = document.getElementById('gemini-api-doc-link'); if (geminiDocLink) geminiDocLink.textContent = t('geminiApiDoc');
-            const geminiInput = document.getElementById('gemini-api-key-input'); if (geminiInput) geminiInput.placeholder = t('geminiInputPh');
-            const geminiSaveBtn = document.getElementById('btn-save-gemini-key'); if (geminiSaveBtn) geminiSaveBtn.textContent = t('geminiSaveKey');
+            const tensorslabPanelSummary = document.getElementById('tensorslab-panel-summary'); if (tensorslabPanelSummary) tensorslabPanelSummary.textContent = t('tensorslabPanelTitle');
+            const tensorslabHint = document.getElementById('tensorslab-config-hint'); if (tensorslabHint) tensorslabHint.textContent = t('tensorslabHint');
+            const tensorslabDocLink = document.getElementById('tensorslab-api-doc-link'); if (tensorslabDocLink) tensorslabDocLink.textContent = t('tensorslabApiDoc');
+            const tensorslabInput = document.getElementById('tensorslab-api-key-input'); if (tensorslabInput) tensorslabInput.placeholder = t('tensorslabInputPh');
+            const tensorslabSaveBtn = document.getElementById('btn-save-tensorslab-key'); if (tensorslabSaveBtn) tensorslabSaveBtn.textContent = t('tensorslabSaveKey');
 
             setPh('asset-search', 'searchPlaceholder');
 
@@ -3747,7 +3747,7 @@ function toggleBrokerPanel() {
             try { setState('writing', detail); } catch (e) {}
         }
 
-        async function ensureGeminiConfigLoaded() {
+        async function ensureTensorslabConfigLoaded() {
             try {
                 const authRes = await fetch('/assets/auth/status', { cache: 'no-store' });
                 const authData = await authRes.json();
@@ -3755,38 +3755,38 @@ function toggleBrokerPanel() {
                 updateAssetAuthUI();
                 if (!assetDrawerAuthed) return;
 
-                const res = await fetch('/config/gemini', { cache: 'no-store' });
+                const res = await fetch('/config/tensorslab', { cache: 'no-store' });
                 const data = await res.json();
                 if (data && data.ok) {
-                    window.geminiConfig = {
+                    window.tensorslabConfig = {
                         hasKey: !!data.has_api_key,
-                        model: data.gemini_model || 'nanobanana-pro'
+                        model: data.tensorslab_model || 'seedreamv5'
                     };
-                    const box = document.getElementById('asset-gemini-config');
+                    const box = document.getElementById('asset-tensorslab-config');
                     if (box) box.style.display = 'block';
-                    const ms = document.getElementById('gemini-mask-status');
+                    const ms = document.getElementById('tensorslab-mask-status');
                     if (ms) {
                         ms.textContent = data.has_api_key
-                            ? `${t('geminiMaskHasKey')} ${data.api_key_masked || ''}`
-                            : t('geminiMaskNoKey');
+                            ? `${t('tensorslabMaskHasKey')} ${data.api_key_masked || ''}`
+                            : t('tensorslabMaskNoKey');
                     }
                 }
             } catch (e) {}
         }
 
-        async function saveGeminiConfigFromUI() {
-            const input = document.getElementById('gemini-api-key-input');
-            const msg = document.getElementById('gemini-config-msg');
+        async function saveTensorslabConfigFromUI() {
+            const input = document.getElementById('tensorslab-api-key-input');
+            const msg = document.getElementById('tensorslab-config-msg');
             const key = (input?.value || '').trim();
             if (!key) {
                 if (msg) msg.textContent = '请输入有效 API Key';
                 return;
             }
             try {
-                const res = await fetch('/config/gemini', {
+                const res = await fetch('/config/tensorslab', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ api_key: key, model: 'nanobanana-pro' })
+                    body: JSON.stringify({ api_key: key, model: 'seedreamv5' })
                 });
                 const data = await res.json();
                 if (!data.ok) {
@@ -3794,9 +3794,9 @@ function toggleBrokerPanel() {
                     return;
                 }
                 if (msg) msg.textContent = '✅ 已保存，可重新点击搬家/中介';
-                const box = document.getElementById('asset-gemini-config');
+                const box = document.getElementById('asset-tensorslab-config');
                 if (box) box.style.display = 'none';
-                await ensureGeminiConfigLoaded();
+                await ensureTensorslabConfigLoaded();
             } catch (e) {
                 if (msg) msg.textContent = `保存失败：${e}`;
             }
@@ -3838,11 +3838,11 @@ function toggleBrokerPanel() {
                 if (!data.ok) {
                     if (data.code === 'MISSING_API_KEY') {
                         out.textContent = t('brokerMissingKey');
-                        const box = document.getElementById('asset-gemini-config');
+                        const box = document.getElementById('asset-tensorslab-config');
                         if (box) box.style.display = 'block';
                     } else if (data.code === 'API_KEY_REVOKED_OR_LEAKED') {
                         out.textContent = '❌ 当前 API Key 已失效/疑似泄露，请更换新 Key 后重试';
-                        const box = document.getElementById('asset-gemini-config');
+                        const box = document.getElementById('asset-tensorslab-config');
                         if (box) box.style.display = 'block';
                     } else if (data.code === 'MODEL_NOT_AVAILABLE') {
                         out.textContent = '❌ 当前模型在此通道不可用，请切换可用模型后重试';
@@ -3884,11 +3884,11 @@ function toggleBrokerPanel() {
                 if (!data.ok) {
                     if (data.code === 'MISSING_API_KEY') {
                         out.textContent = t('brokerMissingKey');
-                        const box = document.getElementById('asset-gemini-config');
+                        const box = document.getElementById('asset-tensorslab-config');
                         if (box) box.style.display = 'block';
                     } else if (data.code === 'API_KEY_REVOKED_OR_LEAKED') {
                         out.textContent = '❌ 当前 API Key 已失效/疑似泄露，请更换新 Key 后重试';
-                        const box = document.getElementById('asset-gemini-config');
+                        const box = document.getElementById('asset-tensorslab-config');
                         if (box) box.style.display = 'block';
                     } else if (data.code === 'MODEL_NOT_AVAILABLE') {
                         out.textContent = '❌ 当前模型在此通道不可用，请切换可用模型后重试';
@@ -4180,7 +4180,7 @@ function toggleBrokerPanel() {
                 assetManualPanelOpen = false;
                 updateAssetAuthUI();
                 bindAssetDrawerBackgroundDeselect();
-                await ensureGeminiConfigLoaded();
+                await ensureTensorslabConfigLoaded();
                 if (assetDrawerAuthed) {
                     await applySavedPositionOverrides();
                     await refreshAssetDrawerList();
@@ -4211,7 +4211,7 @@ function toggleBrokerPanel() {
                 assetManualPanelOpen = false;
                 updateAssetAuthUI();
                 bindAssetDrawerBackgroundDeselect();
-                await ensureGeminiConfigLoaded();
+                await ensureTensorslabConfigLoaded();
                 if (assetDrawerAuthed) {
                     await applySavedPositionOverrides();
                     await refreshAssetDrawerList();
@@ -4888,7 +4888,7 @@ function toggleBrokerPanel() {
             this.load.spritesheet('error_bug', '/static/error-bug-spritesheet-grid.webp?v={{VERSION_TIMESTAMP}}', { frameWidth: 220, frameHeight: 220 });
 
             // 运行时 Gemini 配置（用于搬家/中介生图）
-            this.geminiConfig = { hasKey: false, model: 'gemini-3.1-flash-image-preview' };
+            this.tensorslabConfig = { hasKey: false, model: 'seedreamv5' };
 
             // Cat spritesheet: 160x160, 4x4=16 cats
             this.load.spritesheet('cats', '/static/cats-spritesheet.webp?v={{VERSION_TIMESTAMP}}', { frameWidth: 160, frameHeight: 160 });

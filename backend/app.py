@@ -4,7 +4,7 @@
 from flask import Flask, jsonify, send_from_directory, make_response, request, session
 from datetime import datetime, timedelta
 import json
-import os
+import os, sys
 import random
 import math
 import re
@@ -48,8 +48,8 @@ ASSET_TEMPLATE_ZIP = os.path.join(ROOT_DIR, "assets-replace-template.zip")
 WORKSPACE_DIR = os.path.dirname(ROOT_DIR)
 OPENCLAW_WORKSPACE = os.environ.get("OPENCLAW_WORKSPACE") or os.path.join(os.path.expanduser("~"), ".openclaw", "workspace")
 IDENTITY_FILE = os.path.join(OPENCLAW_WORKSPACE, "IDENTITY.md")
-GEMINI_SCRIPT = os.path.join(WORKSPACE_DIR, "skills", "gemini-image-generate", "scripts", "gemini_image_generate.py")
-GEMINI_PYTHON = os.path.join(WORKSPACE_DIR, "skills", "gemini-image-generate", ".venv", "bin", "python")
+TENSORSLAB_SCRIPT = os.path.join(ROOT_DIR, "scripts", "tensorslab", "tensorslab_image_generate.py")
+TENSORSLAB_PYTHON = sys.executable
 ROOM_REFERENCE_IMAGE = (
     os.path.join(ROOT_DIR, "assets", "room-reference.webp")
     if os.path.exists(os.path.join(ROOT_DIR, "assets", "room-reference.webp"))
@@ -584,11 +584,11 @@ def normalize_agent_state(s):
 # User-facing model aliases -> provider model ids
 USER_MODEL_TO_PROVIDER_MODELS = {
     # 严格按用户要求：仅两种官方模型映射
-    "nanobanana-pro": [
-        "nano-banana-pro-preview",
+    "seedreamv5": [
+        "seedreamv5",
     ],
-    "nanobanana-2": [
-        "gemini-2.5-flash-image",
+    "seedreamv4": [
+        "seedreamv4",
     ],
 }
 
@@ -602,18 +602,18 @@ PROVIDER_MODEL_TO_USER_MODEL = {
 def _normalize_user_model(model_name: str) -> str:
     m = (model_name or "").strip()
     if not m:
-        return "nanobanana-pro"
+        return "seedreamv5"
     low = m.lower()
     if low in USER_MODEL_TO_PROVIDER_MODELS:
         return low
     if low in PROVIDER_MODEL_TO_USER_MODEL:
         return PROVIDER_MODEL_TO_USER_MODEL[low]
-    return "nanobanana-pro"
+    return "seedreamv5"
 
 
 def _provider_model_candidates(user_model: str):
     normalized = _normalize_user_model(user_model)
-    return list(USER_MODEL_TO_PROVIDER_MODELS.get(normalized, USER_MODEL_TO_PROVIDER_MODELS["nanobanana-pro"]))
+    return list(USER_MODEL_TO_PROVIDER_MODELS.get(normalized, USER_MODEL_TO_PROVIDER_MODELS["seedreamv5"]))
 
 
 def _generate_rpg_background_to_webp(out_webp_path: str, width: int = 1280, height: int = 720, custom_prompt: str = "", speed_mode: str = "fast"):
@@ -624,7 +624,7 @@ def _generate_rpg_background_to_webp(out_webp_path: str, width: int = 1280, heig
       - quality: use configured model (fallback nanobanana-pro) + full 1280x720 path
     """
     runtime_cfg = load_runtime_config()
-    api_key = (runtime_cfg.get("gemini_api_key") or "").strip()
+    api_key = (runtime_cfg.get("tensorslab_api_key") or "").strip()
     if not api_key:
         raise RuntimeError("MISSING_API_KEY")
     themes = [
@@ -639,8 +639,8 @@ def _generate_rpg_background_to_webp(out_webp_path: str, width: int = 1280, heig
     ]
     theme = random.choice(themes)
 
-    if not (os.path.exists(GEMINI_PYTHON) and os.path.exists(GEMINI_SCRIPT)):
-        raise RuntimeError("生图脚本环境缺失：gemini-image-generate 未安装")
+    if not (os.path.exists(TENSORSLAB_PYTHON) and os.path.exists(TENSORSLAB_SCRIPT)):
+        raise RuntimeError("生图脚本环境缺失：tensorslab 未就绪")
 
     style_hint = (custom_prompt or "").strip()
     if not style_hint:
@@ -651,9 +651,10 @@ def _generate_rpg_background_to_webp(out_webp_path: str, width: int = 1280, heig
     if mode not in {"fast", "quality"}:
         mode = "quality"
 
-    configured_user_model = _normalize_user_model(runtime_cfg.get("gemini_model") or "nanobanana-pro")
+    configured_user_model = _normalize_user_model(runtime_cfg.get("tensorslab_model") or "seedreamv5")
     if mode == "fast":
-        preferred_user_model = "nanobanana-2"
+        # 用户在脚本里增加了 seedreamv45，我们用它作为 fast 版的更优选择
+        preferred_user_model = "seedreamv45"
         # fast 也提高基础清晰度：从 1024x576 提升到 1152x648（牺牲少量速度）
         gen_width, gen_height = 1152, 648
         ref_width, ref_height = 1152, 648
@@ -662,9 +663,7 @@ def _generate_rpg_background_to_webp(out_webp_path: str, width: int = 1280, heig
         gen_width, gen_height = width, height
         ref_width, ref_height = width, height
 
-    # 同时规避可能触发 400 的特殊能力参数：
-    # 仅 nanobanana-2 走 aspect-ratio，nanobanana-pro 交给模型默认比例（后续再标准化到 1280x720）
-    allow_aspect_ratio = (preferred_user_model == "nanobanana-2")
+    allow_aspect_ratio = True
 
     prompt = (
         "Use a top-down pixel room composition compatible with an office game scene. "
@@ -676,10 +675,10 @@ def _generate_rpg_background_to_webp(out_webp_path: str, width: int = 1280, heig
 
     tmp_dir = tempfile.mkdtemp(prefix="rpg-bg-")
     cmd = [
-        GEMINI_PYTHON,
-        GEMINI_SCRIPT,
+        TENSORSLAB_PYTHON,
+        TENSORSLAB_SCRIPT,
         "--prompt", prompt,
-        "--model", configured_user_model,
+        "--model", preferred_user_model,
         "--out-dir", tmp_dir,
         "--cleanup",
     ]
@@ -704,9 +703,10 @@ def _generate_rpg_background_to_webp(out_webp_path: str, width: int = 1280, heig
         cmd.extend(["--reference-image", ref_for_call])
 
     env = os.environ.copy()
-    # 运行时配置优先：只保留 GEMINI_API_KEY，避免脚本因双 key 报错
+    # 运行时配置优先：只保留 TENSORSLAB_API_KEY，避免脚本因双 key 报错
+    env.pop("GEMINI_API_KEY", None)
     env.pop("GOOGLE_API_KEY", None)
-    env["GEMINI_API_KEY"] = api_key
+    env["TENSORSLAB_API_KEY"] = api_key
 
     def _run_cmd(cmd_args):
         return subprocess.run(cmd_args, capture_output=True, text=True, env=env, timeout=240)
@@ -748,7 +748,7 @@ def _generate_rpg_background_to_webp(out_webp_path: str, width: int = 1280, heig
     model_unavailable_count = 0
 
     for mname in model_candidates:
-        env["GEMINI_MODEL"] = mname
+        env["TENSORSLAB_MODEL"] = mname
         try_cmd = _with_model(cmd, mname)
         proc = _run_cmd(try_cmd)
         if proc.returncode == 0:
@@ -1420,11 +1420,11 @@ def assets_generate_rpg_background():
 
         # Pre-flight checks that can fail fast (before spawning thread)
         runtime_cfg = load_runtime_config()
-        api_key = (runtime_cfg.get("gemini_api_key") or "").strip()
+        api_key = (runtime_cfg.get("tensorslab_api_key") or "").strip()
         if not api_key:
-            return jsonify({"ok": False, "code": "MISSING_API_KEY", "msg": "Missing GEMINI_API_KEY or GOOGLE_API_KEY"}), 400
-        if not (os.path.exists(GEMINI_PYTHON) and os.path.exists(GEMINI_SCRIPT)):
-            return jsonify({"ok": False, "msg": "生图脚本环境缺失：gemini-image-generate 未安装"}), 500
+            return jsonify({"ok": False, "code": "MISSING_API_KEY", "msg": "Missing TENSORSLAB_API_KEY"}), 400
+        if not (os.path.exists(TENSORSLAB_PYTHON) and os.path.exists(TENSORSLAB_SCRIPT)):
+            return jsonify({"ok": False, "msg": "生图脚本环境缺失：tensorslab 未就绪"}), 500
 
         # Check if another generation is already running
         with _bg_tasks_lock:
@@ -1814,39 +1814,39 @@ def assets_defaults_set():
         return jsonify({"ok": False, "msg": str(e)}), 500
 
 
-@app.route("/config/gemini", methods=["GET"])
-def gemini_config_get():
+@app.route("/config/tensorslab", methods=["GET"])
+def tensorslab_config_get():
     guard = _require_asset_editor_auth()
     if guard:
         return guard
     try:
         cfg = load_runtime_config()
-        key = (cfg.get("gemini_api_key") or "").strip()
+        key = (cfg.get("tensorslab_api_key") or "").strip()
         masked = ("*" * max(0, len(key) - 4)) + key[-4:] if key else ""
         return jsonify({
             "ok": True,
             "has_api_key": bool(key),
             "api_key_masked": masked,
-            "gemini_model": _normalize_user_model(cfg.get("gemini_model") or "nanobanana-pro"),
+            "tensorslab_model": _normalize_user_model(cfg.get("tensorslab_model") or "seedreamv5"),
         })
     except Exception as e:
         return jsonify({"ok": False, "msg": str(e)}), 500
 
 
-@app.route("/config/gemini", methods=["POST"])
-def gemini_config_set():
+@app.route("/config/tensorslab", methods=["POST"])
+def tensorslab_config_set():
     guard = _require_asset_editor_auth()
     if guard:
         return guard
     try:
         data = request.get_json(silent=True) or {}
         api_key = (data.get("api_key") or "").strip()
-        model = _normalize_user_model((data.get("model") or "").strip() or "nanobanana-pro")
-        payload = {"gemini_model": model}
+        model = _normalize_user_model((data.get("model") or "").strip() or "seedreamv5")
+        payload = {"tensorslab_model": model}
         if api_key:
-            payload["gemini_api_key"] = api_key
+            payload["tensorslab_api_key"] = api_key
         save_runtime_config(payload)
-        return jsonify({"ok": True, "msg": "Gemini 配置已保存"})
+        return jsonify({"ok": True, "msg": "Tensorslab 配置已保存"})
     except Exception as e:
         return jsonify({"ok": False, "msg": str(e)}), 500
 

@@ -74,29 +74,25 @@ def save_asset_defaults(path: str, data: dict):
 
 
 def _normalize_user_model(model_name: str) -> str:
-    """Map provider model names to canonical user-facing options (nanobanana-pro / nanobanana-2)."""
+    """Map provider model names to canonical user-facing options (seedreamv5 / seedreamv4)."""
     m = (model_name or "").strip().lower()
-    if m in {"nanobanana-pro", "nanobanana-2"}:
+    if m in {"seedreamv5", "seedreamv4"}:
         return m
-    if m in {"nano-banana-pro-preview", "gemini-3-pro-image-preview"}:
-        return "nanobanana-pro"
-    if m in {"gemini-2.5-flash-image", "gemini-2.0-flash-exp-image-generation"}:
-        return "nanobanana-2"
-    return "nanobanana-pro"
+    return "seedreamv5"
 
 
 def load_runtime_config(path: str) -> dict:
-    """Load runtime config (gemini_api_key, gemini_model) from env and optional JSON file."""
+    """Load runtime config (tensorslab_api_key, tensorslab_model) from env and optional JSON file."""
     base = {
-        "gemini_api_key": os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY") or "",
-        "gemini_model": _normalize_user_model(os.getenv("GEMINI_MODEL") or "nanobanana-pro"),
+        "tensorslab_api_key": os.getenv("TENSORSLAB_API_KEY") or os.getenv("GEMINI_API_KEY") or "",
+        "tensorslab_model": _normalize_user_model(os.getenv("TENSORSLAB_MODEL") or "seedreamv5"),
     }
     if os.path.exists(path):
         try:
             data = _load_json(path)
             if isinstance(data, dict):
-                base.update({k: data.get(k, base.get(k)) for k in ["gemini_api_key", "gemini_model"]})
-                base["gemini_model"] = _normalize_user_model(base.get("gemini_model") or "nanobanana-pro")
+                base.update({k: data.get(k, base.get(k)) for k in ["tensorslab_api_key", "tensorslab_model"]})
+                base["tensorslab_model"] = _normalize_user_model(base.get("tensorslab_model") or "seedreamv5")
         except Exception:
             pass
     return base
