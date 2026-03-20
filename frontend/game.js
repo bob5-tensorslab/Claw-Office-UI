@@ -101,11 +101,14 @@ function hideLoadingOverlay() {
 
 const STATES = {
   idle: { name: '待命', area: 'breakroom' },
-  writing: { name: '整理文档', area: 'writing' },
+  writing: { name: '文档处理', area: 'writing' },
   researching: { name: '搜索信息', area: 'researching' },
   executing: { name: '执行任务', area: 'writing' },
   syncing: { name: '同步备份', area: 'writing' },
-  error: { name: '出错了', area: 'error' }
+  error: { name: '出错了', area: 'error' },
+  drawing: { name: '画图', area: 'writing' },
+  video: { name: '做视频', area: 'writing' },
+  dressup: { name: '换装', area: 'writing' }
 };
 
 const BUBBLE_TEXTS = {
@@ -173,6 +176,9 @@ const BUBBLE_TEXTS = {
     '别怕，这种我见多了',
     '报警中：让问题自己现形'
   ],
+  drawing: ['画图中：构思色彩','正在渲染像素','上色中…不要急','调整画笔边缘','每一帧都在燃烧GPU'],
+  video: ['做视频：剪辑进行中','时间线对齐','添加转场特效','渲染序列帧','音轨同步中'],
+  dressup: ['换装中：寻找合适的搭配','这件衣服不错','穿搭灵感涌现','整理像素外观','试穿新衣服'],
   cat: [
     '喵~',
     '咕噜咕噜…',
@@ -233,14 +239,14 @@ const AREA_POSITIONS = {
     { x: 580, y: 200 }
   ],
   writing: [
-    { x: 760, y: 320 },
-    { x: 830, y: 280 },
-    { x: 690, y: 350 },
-    { x: 770, y: 260 },
-    { x: 850, y: 340 },
-    { x: 720, y: 300 },
-    { x: 800, y: 370 },
-    { x: 750, y: 240 }
+    { x: 810, y: 154 },
+    { x: 830, y: 180 },
+    { x: 790, y: 130 },
+    { x: 820, y: 170 },
+    { x: 800, y: 140 },
+    { x: 840, y: 160 },
+    { x: 780, y: 120 },
+    { x: 850, y: 190 }
   ],
   error: [
     { x: 180, y: 260 },
@@ -374,7 +380,7 @@ function create() {
   const plaqueY = LAYOUT.plaque.y;
   const plaqueBg = game.add.rectangle(plaqueX, plaqueY, LAYOUT.plaque.width, LAYOUT.plaque.height, 0x5d4037);
   plaqueBg.setStrokeStyle(3, 0x3e2723);
-  const plaqueText = game.add.text(plaqueX, plaqueY, '海辛小龙虾的办公室', {
+  const plaqueText = game.add.text(plaqueX, plaqueY, 'TensorsLab Claw Room', {
     fontFamily: 'ArkPixel, monospace',
     fontSize: '18px',
     fill: '#ffd700',
@@ -439,6 +445,7 @@ function create() {
     'coffee_machine'
   ).setOrigin(LAYOUT.furniture.coffeeMachine.origin.x, LAYOUT.furniture.coffeeMachine.origin.y);
   coffeeMachine.setDepth(LAYOUT.furniture.coffeeMachine.depth);
+  coffeeMachine.setVisible(false);
   coffeeMachine.anims.play('coffee_machine', true);
 
   // === 服务器区（来自 LAYOUT）===
@@ -538,6 +545,7 @@ function create() {
     0
   ).setOrigin(LAYOUT.furniture.syncAnim.origin.x, LAYOUT.furniture.syncAnim.origin.y);
   syncAnimSprite.setDepth(LAYOUT.furniture.syncAnim.depth);
+  syncAnimSprite.setVisible(false);
   syncAnimSprite.anims.stop();
   syncAnimSprite.setFrame(0);
 
@@ -642,19 +650,9 @@ function update(time) {
       if (!window.errorBug.anims.isPlaying || window.errorBug.anims.currentAnim?.key !== 'error_bug') {
         window.errorBug.anims.play('error_bug', true);
       }
-      const leftX = LAYOUT.furniture.errorBug.pingPong.leftX;
-      const rightX = LAYOUT.furniture.errorBug.pingPong.rightX;
-      const speed = LAYOUT.furniture.errorBug.pingPong.speed;
-      const dir = window.errorBugDir || 1;
-      window.errorBug.x += speed * dir;
-      window.errorBug.y = LAYOUT.furniture.errorBug.y;
-      if (window.errorBug.x >= rightX) {
-        window.errorBug.x = rightX;
-        window.errorBugDir = -1;
-      } else if (window.errorBug.x <= leftX) {
-        window.errorBug.x = leftX;
-        window.errorBugDir = 1;
-      }
+      // 固定在原地
+      window.errorBug.x = 838;
+      window.errorBug.y = 537;
     } else {
       window.errorBug.setVisible(false);
       window.errorBug.anims.stop();
@@ -794,6 +792,28 @@ function moveStar(time) {
   const effectiveState = pendingDesiredState || currentState;
   const stateInfo = STATES[effectiveState] || STATES.idle;
   const baseTarget = areas[stateInfo.area] || areas.breakroom;
+
+  // error 状态直接瞬移/显示动画，不走动
+  if (effectiveState === 'error') {
+    if (window.errorBug) {
+      window.errorBug.setVisible(true);
+      if (!window.errorBug.anims.isPlaying || window.errorBug.anims.currentAnim?.key !== 'error_bug') {
+        window.errorBug.anims.play('error_bug', true);
+      }
+      window.errorBug.x = 838;
+      window.errorBug.y = 537;
+    }
+    if (star) {
+      star.setVisible(false);
+      star.anims.stop();
+    }
+    if (window.starWorking) {
+      window.starWorking.setVisible(false);
+      window.starWorking.anims.stop();
+    }
+    isMoving = false;
+    return;
+  }
 
   const dx = targetX - star.x;
   const dy = targetY - star.y;

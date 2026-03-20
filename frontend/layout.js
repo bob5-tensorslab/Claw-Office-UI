@@ -16,10 +16,12 @@ const LAYOUT = {
   // === 各区域坐标 ===
   areas: {
     door:        { x: 640, y: 550 },
-    writing:     { x: 320, y: 360 },
-    researching: { x: 320, y: 360 },
-    error:       { x: 1066, y: 180 },
-    breakroom:   { x: 640, y: 360 }
+    writing:     { x: 810, y: 154 },
+    researching: { x: 810, y: 154 },
+    error:       { x: 838, y: 537 },
+    breakroom:   { x: 500, y: 580 },
+    drawing:     { x: 1203, y: 279 },
+    video:       { x: 1194, y: 169 }
   },
 
   // === 装饰与家具：坐标 + 原点 + depth ===
@@ -51,8 +53,8 @@ const LAYOUT = {
 
     // Star 在桌前工作（在 desk 下面）
     starWorking: {
-      x: 217,
-      y: 333,
+      x: 810,
+      y: 154,
       origin: { x: 0.5, y: 0.5 },
       depth: 900,
       scale: 1.32
@@ -90,18 +92,18 @@ const LAYOUT = {
 
     // 错误 bug
     errorBug: {
-      x: 1007,
-      y: 221,
+      x: 838,
+      y: 537,
       origin: { x: 0.5, y: 0.5 },
       depth: 50,
       scale: 0.9,
-      pingPong: { leftX: 1007, rightX: 1111, speed: 0.6 }
+      pingPong: { leftX: 838, rightX: 942, speed: 0.6 }
     },
 
     // 同步动画
     syncAnim: {
-      x: 1157,
-      y: 592,
+      x: 810,
+      y: 154,
       origin: { x: 0.5, y: 0.5 },
       depth: 40
     },

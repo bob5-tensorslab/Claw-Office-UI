@@ -361,7 +361,7 @@ function create() {
   const plaqueY = LAYOUT.plaque.y;
   const plaqueBg = game.add.rectangle(plaqueX, plaqueY, LAYOUT.plaque.width, LAYOUT.plaque.height, 0x5d4037);
   plaqueBg.setStrokeStyle(3, 0x3e2723);
-  const plaqueText = game.add.text(plaqueX, plaqueY, '海辛小龙虾的办公室', {
+  const plaqueText = game.add.text(plaqueX, plaqueY, 'TensorsLab Claw Room', {
     fontFamily: 'ArkPixel, monospace',
     fontSize: '18px',
     fill: '#ffd700',
@@ -426,6 +426,7 @@ function create() {
     'coffee_machine'
   ).setOrigin(LAYOUT.furniture.coffeeMachine.origin.x, LAYOUT.furniture.coffeeMachine.origin.y);
   coffeeMachine.setDepth(LAYOUT.furniture.coffeeMachine.depth);
+  coffeeMachine.setVisible(false);
   coffeeMachine.anims.play('coffee_machine', true);
 
   // === 服务器区（来自 LAYOUT）===
@@ -525,6 +526,7 @@ function create() {
     0
   ).setOrigin(LAYOUT.furniture.syncAnim.origin.x, LAYOUT.furniture.syncAnim.origin.y);
   syncAnimSprite.setDepth(LAYOUT.furniture.syncAnim.depth);
+  syncAnimSprite.setVisible(false);
   syncAnimSprite.anims.stop();
   syncAnimSprite.setFrame(0);
 
@@ -763,6 +765,28 @@ function moveStar(time) {
   const effectiveState = pendingDesiredState || currentState;
   const stateInfo = STATES[effectiveState] || STATES.idle;
   const baseTarget = areas[stateInfo.area] || areas.breakroom;
+
+  // error 状态直接瞬移/显示动画，不走动
+  if (effectiveState === 'error') {
+    if (window.errorBug) {
+      window.errorBug.setVisible(true);
+      if (!window.errorBug.anims.isPlaying || window.errorBug.anims.currentAnim?.key !== 'error_bug') {
+        window.errorBug.anims.play('error_bug', true);
+      }
+      window.errorBug.x = 838;
+      window.errorBug.y = 537;
+    }
+    if (star) {
+      star.setVisible(false);
+      star.anims.stop();
+    }
+    if (window.starWorking) {
+      window.starWorking.setVisible(false);
+      window.starWorking.anims.stop();
+    }
+    isMoving = false;
+    return;
+  }
 
   const dx = targetX - star.x;
   const dy = targetY - star.y;

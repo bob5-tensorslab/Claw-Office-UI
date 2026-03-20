@@ -643,9 +643,12 @@
             background: #4a4f5f;
             border-color: #e94560;
         }
-        /* Star 状态四按钮（不含装修）使用像素精灵皮肤 */
+        /* Star 状态按钮（不含装修）使用像素精灵皮肤 */
         #control-bar #btn-state-idle,
         #control-bar #btn-state-writing,
+        #control-bar #btn-state-image,
+        #control-bar #btn-state-video,
+        #control-bar #btn-state-character,
         #control-bar #btn-state-syncing,
         #control-bar #btn-state-error {
             background-image: url('/static/btn-state-sprite.png?v={{VERSION_TIMESTAMP}}');
@@ -667,6 +670,9 @@
         }
         #control-bar #btn-state-idle:hover,
         #control-bar #btn-state-writing:hover,
+        #control-bar #btn-state-image:hover,
+        #control-bar #btn-state-video:hover,
+        #control-bar #btn-state-character:hover,
         #control-bar #btn-state-syncing:hover,
         #control-bar #btn-state-error:hover {
             background-color: transparent !important;
@@ -674,6 +680,9 @@
         }
         #control-bar #btn-state-idle:active,
         #control-bar #btn-state-writing:active,
+        #control-bar #btn-state-image:active,
+        #control-bar #btn-state-video:active,
+        #control-bar #btn-state-character:active,
         #control-bar #btn-state-syncing:active,
         #control-bar #btn-state-error:active {
             background-position: 50% 0;
@@ -1160,10 +1169,13 @@
         
         <!-- 状态控制栏 -->
         <div id="control-bar">
-            <div id="control-bar-title">Star 状态</div>
+            <div id="control-bar-title">小龙虾状态</div>
             <div id="control-buttons">
                 <button id="btn-state-idle" onclick="setState('idle','待命')">待命</button>
-                <button id="btn-state-writing" onclick="setState('writing','工作中')">工作</button>
+                <button id="btn-state-writing" onclick="setState('writing','文档处理中')">文档处理</button>
+                <button id="btn-state-image" onclick="setState('image_gen','画图中')">画图</button>
+                <button id="btn-state-video" onclick="setState('video_gen','做视频中')">做视频</button>
+                <button id="btn-state-character" onclick="setState('character_swap','换装中')">换装</button>
                 <button id="btn-state-syncing" onclick="setState('syncing','同步中')">同步</button>
                 <button id="btn-state-error" onclick="setState('error','报警中')">报警</button>
                 <button id="btn-open-drawer" onclick="toggleAssetDrawer()">装修房间</button>
@@ -1293,8 +1305,8 @@
         let uiLang = localStorage.getItem('uiLang') || 'en';
         const I18N = {
             zh: {
-                controlTitle: 'Star 状态',
-                btnIdle: '待命', btnWork: '工作', btnSync: '同步', btnError: '报警', btnDecor: '装修房间',
+                controlTitle: '小龙虾状态',
+                btnIdle: '待命', btnWork: '文档处理', btnImage: '画图', btnVideo: '做视频', btnChar: '换装', btnSync: '同步', btnError: '报警', btnDecor: '装修房间',
                 drawerTitle: '装修房间 · 资产侧边栏', drawerClose: '关闭',
                 authTitle: '请输入装修验证码', authPlaceholder: '输入验证码', authVerify: '验证', authDefaultPassHint: '默认密码：1234（可随时让我帮你改，建议改成强密码）',
                 drawerVisibilityTip: '可见性：点击条目右侧眼睛按钮切换该资产显示',
@@ -1317,12 +1329,12 @@
                 assetHintNotInScene: '当前场景未检测到此对象，仍可替换文件（刷新后生效）',
                 assetHintDefault: '通用素材：建议保持原图尺寸、透明通道与视觉重心一致，避免错位或失真',
                 showCoords: '显示坐标', hideCoords: '隐藏坐标', moveView: '移动视野', lockView: '锁定视野',
-                memoTitle: '昨 日 小 记', guestTitle: '访 客 列 表', officeTitle: '海辛小龙虾的办公室',
+                memoTitle: '昨 日 小 记', guestTitle: '访 客 列 表', officeTitle: 'Tensorslab的龙虾办公室',
                 loadingOffice: '正在加载 Star 的像素办公室...'
             },
             en: {
-                controlTitle: 'Star Status',
-                btnIdle: 'Idle', btnWork: 'Work', btnSync: 'Sync', btnError: 'Alert', btnDecor: 'Decorate Room',
+                controlTitle: 'Claw Status',
+                btnIdle: 'Idle', btnWork: 'doc_process', btnImage: 'image_gen', btnVideo: 'video_gen', btnChar: 'character_swap', btnSync: 'Sync', btnError: 'Alert', btnDecor: 'Decorate Room',
                 drawerTitle: 'Decorate Room · Asset Sidebar', drawerClose: 'Close',
                 authTitle: 'Enter Decor Passcode', authPlaceholder: 'Enter passcode', authVerify: 'Verify', authDefaultPassHint: 'Default passcode: 1234 (ask me anytime to change it; stronger passcode recommended)',
                 drawerVisibilityTip: 'Visibility: use the eye button on each row to hide/show that asset',
@@ -1345,12 +1357,12 @@
                 assetHintNotInScene: 'This object is not detected in current scene; you can still replace file (effective after refresh)',
                 assetHintDefault: 'Generic asset: keep source size, alpha channel, and visual anchor to avoid drift/distortion',
                 showCoords: 'Show Coords', hideCoords: 'Hide Coords', moveView: 'Pan View', lockView: 'Lock View',
-                memoTitle: 'YESTERDAY NOTES', guestTitle: 'VISITOR LIST', officeTitle: 'Haixin Lobster Office',
+                memoTitle: 'YESTERDAY NOTES', guestTitle: 'VISITOR LIST', officeTitle: 'Tensorslab Claw Office',
                 loadingOffice: 'Loading Star’s pixel office...'
             },
             ja: {
                 controlTitle: 'Star ステータス',
-                btnIdle: '待機', btnWork: '作業', btnSync: '同期', btnError: '警報', btnDecor: '部屋を編集',
+                btnIdle: '待機', btnWork: '文書処理', btnImage: '画像生成', btnVideo: '動画作成', btnChar: '着せ替え', btnSync: '同期', btnError: '警報', btnDecor: '部屋を編集',
                 drawerTitle: '部屋編集・アセットサイドバー', drawerClose: '閉じる',
                 authTitle: '編集パスコードを入力', authPlaceholder: 'パスコード入力', authVerify: '認証', authDefaultPassHint: '初期パスコード：1234（いつでも変更を相談可。強固なパス推奨）',
                 drawerVisibilityTip: '表示切替：各行右側の目ボタンで資産を表示/非表示',
@@ -1373,7 +1385,7 @@
                 assetHintNotInScene: '現在のシーンでこのオブジェクトは未検出です。ファイル差し替えは可能（更新後に反映）',
                 assetHintDefault: '汎用素材：元サイズ・透過・視覚アンカーを維持し、ズレや崩れを防いでください',
                 showCoords: '座標表示', hideCoords: '座標非表示', moveView: '視点移動', lockView: '視点固定',
-                memoTitle: '昨日のメモ', guestTitle: '訪問者リスト', officeTitle: 'ハイシン・ロブスターのオフィス',
+                memoTitle: '昨日のメモ', guestTitle: '訪問者リスト', officeTitle: 'Tensorslabのロブスター',
                 loadingOffice: 'Star のピクセルオフィスを読み込み中...'
             }
         };
@@ -1401,6 +1413,9 @@
             setText('control-bar-title', 'controlTitle');
             setText('btn-state-idle', 'btnIdle');
             setText('btn-state-writing', 'btnWork');
+            setText('btn-state-image', 'btnImage');
+            setText('btn-state-video', 'btnVideo');
+            setText('btn-state-character', 'btnChar');
             setText('btn-state-syncing', 'btnSync');
             setText('btn-state-error', 'btnError');
             setText('btn-open-drawer', 'btnDecor');
@@ -1613,12 +1628,15 @@
         // 懒加载逻辑已取消（体验优先：装饰首屏直接出现）
 
         const STATES = {
-            idle: { name: '待命', area: 'breakroom' },
-            writing: { name: '整理文档', area: 'writing' },
-            researching: { name: '搜索信息', area: 'researching' },
-            executing: { name: '执行任务', area: 'writing' },
-            syncing: { name: '同步备份', area: 'writing' },
-            error: { name: '出错了', area: 'error' }
+            idle: { name: '待命', area: 'zone1' },
+            writing: { name: '文档处理', area: 'zone2' },
+            researching: { name: '搜索信息', area: 'zone3' },
+            executing: { name: '执行任务', area: 'zone2' },
+            syncing: { name: '同步备份', area: 'zone4' },
+            error: { name: '出错了', area: 'zone5' },
+            drawing: { name: '画图', area: 'zone2' },
+            video: { name: '做视频', area: 'zone2' },
+            dressup: { name: '换装', area: 'zone2' }
         };
 
         const BUBBLE_TEXTS = {
@@ -1629,6 +1647,9 @@
                 executing: ['执行中：不要眨眼','把任务切成小块逐个击破','开始跑 pipeline','一键推进：走你','让结果自己说话','先做最小可行，再做最美版本'],
                 syncing: ['同步中：把今天锁进云里','备份不是仪式，是安全感','写入中…别断电','把变更交给时间戳','云端对齐：咔哒','同步完成前先别乱动','把未来的自己从灾难里救出来','多一份备份，少一份后悔'],
                 error: ['警报响了：先别慌','我闻到 bug 的味道了','先复现，再谈修复','把日志给我，我会说人话','错误不是敌人，是线索','把影响面圈起来','先止血，再手术','我在：马上定位根因','别怕，这种我见多了','报警中：让问题自己现形'],
+                drawing: ['画图中：构思色彩','正在渲染像素','上色中…不要急','调整画笔边缘','每一帧都在燃烧GPU'],
+                video: ['做视频：剪辑进行中','时间线对齐','添加转场特效','渲染序列帧','音轨同步中'],
+                dressup: ['换装中：寻找合适的搭配','这件衣服不错','穿搭灵感涌现','整理像素外观','试穿新衣服'],
                 cat: ['喵~','咕噜咕噜…','尾巴摇一摇','晒太阳最开心','有人来看我啦','我是这个办公室的吉祥物','伸个懒腰','今天的罐罐准备好了吗','呼噜呼噜','这个位置视野最好']
             },
             en: {
@@ -1638,6 +1659,9 @@
                 executing: ['Executing—don’t blink.','Split tasks, conquer one by one.','Pipeline is running.','One-click push: go go.','Let the results speak.','Build MVP first, then craft beauty.'],
                 syncing: ['Syncing: lock today into the cloud.','Backup is safety, not ceremony.','Writing… don’t cut power.','Handing changes to timestamps.','Cloud alignment: click.','Don’t shake it before sync finishes.','Saving future-us from disasters.','One more backup, one less regret.'],
                 error: ['Alarm on—stay calm.','I can smell a bug.','Reproduce first, then fix.','Give me logs; I’ll translate.','Errors are clues, not enemies.','Circle the impact area first.','Stop the bleeding, then surgery.','On it: tracing root cause now.','Don’t worry, seen this many times.','Alert mode: make the issue reveal itself.'],
+                drawing: ['Drawing: Thinking of colors', 'Rendering pixels', 'Coloring... be patient', 'Adjusting brush edges', 'Every frame burns GPU'],
+                video: ['Video: Editing in progress', 'Timeline aligned', 'Adding transitions', 'Rendering sequence', 'Audio track syncing'],
+                dressup: ['Dressup: Finding the right outfit', 'This looks good', 'Outfit inspiration', 'Adjusting pixel appearance', 'Trying new clothes'],
                 cat: ['Meow~','Purr purr…','Tail wiggle activated.','Sunbathing is the best.','Someone came to see me!','I’m the office mascot.','Big stretch~','Is today’s snack ready yet?','Rrrrr purr…','Best view spot secured.']
             },
             ja: {
@@ -1647,12 +1671,15 @@
                 executing: ['実行中：まばたき厳禁。','タスクを分割して各個撃破。','パイプライン起動。','ワンクリック前進：いくぞ。','結果に語らせる。','まず最小実用、次に美しさ。'],
                 syncing: ['同期中：今日をクラウドに封印。','バックアップは儀式じゃなく安心。','書き込み中…電源オフ厳禁。','変更はタイムスタンプへ。','クラウド整列：カチッ。','同期完了まで触らないで。','未来の自分を災害から救う。','バックアップ一つ、後悔一つ減る。'],
                 error: ['警報：まず落ち着いて。','バグの気配を感じる。','再現してから修正へ。','ログをください、人語にします。','エラーは敵ではなく手がかり。','まず影響範囲を囲う。','止血してから手術。','今すぐ根因を追跡中。','大丈夫、よくある案件。','警戒モード：問題を可視化する。'],
+                drawing: ['描画中：色を考案中', 'ピクセルをレンダリング', '着色中…焦らないで', 'ブラシの端を調整中', 'すべてのフレームでGPUを燃やしている'],
+                video: ['動画作成：編集中', 'タイムラインを合わせる', 'トランジションを追加', 'シーケンスをレンダリング', '音声トラック同期中'],
+                dressup: ['着せ替え中：適切なコーディネートを探す', 'この服はいいね', 'コーデのインスピレーション', 'ピクセルの外観を調整', '新しい服を試着'],
                 cat: ['ニャー','ゴロゴロ…','しっぽフリフリ。','ひなたぼっこ最高。','見に来てくれた！','このオフィスのマスコットです。','ぐーっと伸び。','今日のおやつ、準備できた？','ゴロゴロ。','ここ、いちばん見晴らしがいい。']
             }
         };
 
         let game, star, sofa, serverroom, officeBgSprite, areas = {}, currentState = 'idle', pendingDesiredState = null, statusText, lastFetch = 0, lastBlink = 0, lastBubble = 0, targetX = 660, targetY = 170, bubble = null, typewriterText = '', typewriterTarget = '', typewriterIndex = 0, lastTypewriter = 0, syncAnimSprite = null, syncAnimPlayable = false, catBubble = null, selectionBoxGraphics = null;
-        const IDLE_SOFA_ANCHOR = { x: 798, y: 272 }; // 统一中心锚点（原 sofa 左上 670,144 的中心）
+        const IDLE_SOFA_ANCHOR = { x: 500, y: 580 }; // 统一中心锚点（原 sofa 左上 670,144 的中心）
         const IDLE_STAR_SCALE = 1.0; // star idle 改为256帧原生显示，不再放大
         // flowers 精灵表规格：固定单帧 128x128，4x4
         let FLOWERS_FRAME_W = 65;
@@ -3502,14 +3529,14 @@ function toggleBrokerPanel() {
                     { x: 650, y: 580 }
                 ],
                 writing: [
-                    { x: 190, y: 526 },
-                    { x: 380, y: 683 },
-                    { x: 300, y: 610 },
-                    { x: 240, y: 570 },
-                    { x: 350, y: 640 },
-                    { x: 160, y: 600 },
-                    { x: 420, y: 560 },
-                    { x: 280, y: 660 }
+                    { x: 810, y: 154 },
+                    { x: 830, y: 180 },
+                    { x: 790, y: 130 },
+                    { x: 820, y: 170 },
+                    { x: 800, y: 140 },
+                    { x: 840, y: 160 },
+                    { x: 780, y: 120 },
+                    { x: 850, y: 190 }
                 ],
                 error: [
                     { x: 932, y: 275 },
@@ -4034,14 +4061,18 @@ function toggleBrokerPanel() {
             // NOTE: coordinates are interpreted as the TOP-LEFT corner of the sprite
             const sofaShadow = this.add.image(IDLE_SOFA_ANCHOR.x, IDLE_SOFA_ANCHOR.y, 'sofa_shadow').setOrigin(0.5);
             sofaShadow.setDepth(9);
+            sofaShadow.setVisible(false);
             sofa = this.add.sprite(IDLE_SOFA_ANCHOR.x, IDLE_SOFA_ANCHOR.y, 'sofa_idle').setOrigin(0.5);
             sofa.setDepth(10);
+            sofa.setVisible(false);
             areas = {
-                door: { x: 640, y: 550 }, // 墙的门（偏下 1/3 位置）
-                writing: { x: 320, y: 360 }, // 左 1/3 中间（办公桌）
-                researching: { x: 320, y: 360 }, // 左 1/3 中间（研究也在办公区
-                error: { x: 1066, y: 180 }, // 右 1/3 上 1/2（服务器区
-                breakroom: { x: IDLE_SOFA_ANCHOR.x, y: IDLE_SOFA_ANCHOR.y } // 与 sofa-idle-v3 同中心锚点
+                door: { x: 640, y: 550 },
+                writing: { x: 810, y: 154 },
+                researching: { x: 810, y: 154 },
+                error: { x: 838, y: 537 },
+                breakroom: { x: 500, y: 580 },
+                drawing: { x: 1203, y: 279 },
+                video: { x: 1194, y: 169 }
             };
 
             // 创建 Star 角色待命动画（每次先移除旧定义，确保不复用历史动画）
@@ -4106,6 +4137,7 @@ function toggleBrokerPanel() {
             const randomPlantFrame = Math.floor(Math.random() * plantFrameCount);
             const plant = game.add.sprite(565, 178, 'plants', randomPlantFrame).setOrigin(0.5);
             plant.setDepth(5);
+            plant.setVisible(false);
             plant.setInteractive({ useHandCursor: true });
             // Expose to global for click handler
             window.plantSprite = plant;
@@ -4120,6 +4152,7 @@ function toggleBrokerPanel() {
             const plant2Frame = Math.floor(Math.random() * plantFrameCount);
             const plant2 = game.add.sprite(230, 185, 'plants', plant2Frame).setOrigin(0.5);
             plant2.setDepth(5);
+            plant2.setVisible(false);
             plant2.setInteractive({ useHandCursor: true });
             // Expose to global for click handler
             window.plantSprite2 = plant2;
@@ -4133,6 +4166,7 @@ function toggleBrokerPanel() {
             const plant3Frame = Math.floor(Math.random() * plantFrameCount);
             const plant3 = game.add.sprite(977, 496, 'plants', plant3Frame).setOrigin(0.5);
             plant3.setDepth(5);
+            plant3.setVisible(false);
             plant3.setInteractive({ useHandCursor: true });
             // Expose to global for click handler
             window.plantSprite3 = plant3;
@@ -4147,6 +4181,7 @@ function toggleBrokerPanel() {
             const randomPosterFrame = Math.floor(Math.random() * Math.max(1, postersFrameCount));
             const poster = game.add.sprite(252, 66, 'posters', randomPosterFrame).setOrigin(0.5);
             poster.setDepth(4);
+            poster.setVisible(false);
             poster.setInteractive({ useHandCursor: true });
             // Expose to global for click handler
             window.posterSprite = poster;
@@ -4162,6 +4197,7 @@ function toggleBrokerPanel() {
             const randomCatFrame = Math.floor(Math.random() * Math.max(1, catsFrameCount));
             const cat = game.add.sprite(94, 557, 'cats', randomCatFrame).setOrigin(0.5);
             cat.setDepth(2000); // top layer
+            cat.setVisible(false);
             cat.setInteractive({ useHandCursor: true });
             // Expose to global for click handler
             window.catSprite = cat;
@@ -4174,6 +4210,7 @@ function toggleBrokerPanel() {
             // Coffee machine at (659,397) - animated sprite + shadow
             const coffeeMachineShadow = this.add.image(659, 397, 'coffee_machine_shadow').setOrigin(0.5);
             coffeeMachineShadow.setDepth(98);
+            coffeeMachineShadow.setVisible(false);
             const coffeeFrameMax = Math.max(0, (this.textures.get('coffee_machine')?.frameTotal || 1) - 2);
             if (this.anims.exists('coffee_machine')) {
                 this.anims.remove('coffee_machine');
@@ -4186,6 +4223,7 @@ function toggleBrokerPanel() {
             });
             const coffeeMachine = this.add.sprite(659, 397, 'coffee_machine').setOrigin(0.5);
             coffeeMachine.setDepth(99);
+            coffeeMachine.setVisible(false);
             coffeeMachine.anims.play('coffee_machine', true);
 
             // Server room animation
@@ -4198,6 +4236,7 @@ function toggleBrokerPanel() {
             });
             serverroom = this.add.sprite(1021, 142, 'serverroom', 0).setOrigin(0.5);
             serverroom.setDepth(2);
+            serverroom.setVisible(false);
             // 默认 idle: 静止第0帧
             serverroom.anims.stop();
             serverroom.setFrame(0);
@@ -4205,6 +4244,7 @@ function toggleBrokerPanel() {
             // Desk at (218,417) (v2)
             const desk = this.add.image(218, 417, 'desk_v2').setOrigin(0.5);
             desk.setDepth(1001);  // desk above starWorking
+            desk.setVisible(false);
 
             // Random flower pot at (310,390), default scale 0.8 (top layer)
             const flowerFrameCount = Math.max(1, FLOWERS_FRAME_COLS * FLOWERS_FRAME_ROWS); // 动态帧数
@@ -4212,6 +4252,7 @@ function toggleBrokerPanel() {
             const flower = this.add.sprite(310, 390, 'flowers', randomFlowerFrame).setOrigin(0.5);
             flower.setScale(0.8);
             flower.setDepth(1100); // highest among desk/starWorking
+            flower.setVisible(false);
             flower.setInteractive({ useHandCursor: true });
             window.flowerSprite = flower;
             window.flowerFrameCount = flowerFrameCount;
@@ -4238,14 +4279,14 @@ function toggleBrokerPanel() {
             });
 
             // Error bug character (moves between two points when state=error)
-            const errorBug = this.add.sprite(1007, 221, 'error_bug', 0).setOrigin(0.5);
+            const errorBug = this.add.sprite(838, 537, 'error_bug', 0).setOrigin(0.5);
             errorBug.setDepth(50); // above serverroom, below desk/bubbles
             errorBug.setVisible(false);
             errorBug.setScale(0.9); // shrink 10%
             errorBug.anims.play('error_bug', true);
             window.errorBug = errorBug;
             window.errorBugDir = 1; // 1 -> to right, -1 -> to left
-            const starWorking = this.add.sprite(217, 343, 'star_working', 0).setOrigin(0.5);
+            const starWorking = this.add.sprite(810, 154, 'star_working', 0).setOrigin(0.5);
             starWorking.setVisible(false);
             starWorking.setScale(0.9);
             starWorking.setDepth(900);  // starWorking under desk so desk partially covers it
@@ -4269,8 +4310,9 @@ function toggleBrokerPanel() {
                 repeat: -1
             });
             }
-            syncAnimSprite = this.add.sprite(1157, 592, 'sync_anim', 0).setOrigin(0.5);
+            syncAnimSprite = this.add.sprite(810, 154, 'sync_anim', 0).setOrigin(0.5);
             syncAnimSprite.setDepth(40);
+            syncAnimSprite.setVisible(false);
             // default show first frame only
             syncAnimSprite.anims.stop();
             syncAnimSprite.setFrame(0);
@@ -4507,8 +4549,8 @@ function toggleBrokerPanel() {
                         window.errorBug.anims.play('error_bug', true);
                     }
                     // 固定在原地（按需求取消 error 移动路径）
-                    window.errorBug.x = 1007;
-                    window.errorBug.y = 221;
+                    window.errorBug.x = 838;
+                    window.errorBug.y = 537;
                 } else {
                     window.errorBug.setVisible(false);
                     window.errorBug.anims.stop();
@@ -4715,6 +4757,28 @@ function toggleBrokerPanel() {
             const effectiveState = pendingDesiredState || currentState;
             const stateInfo = STATES[effectiveState] || STATES.idle;
             const baseTarget = areas[stateInfo.area] || areas.breakroom;
+
+            // 如果当前在走动过程中目标状态被切成了 error
+            if (effectiveState === 'error') {
+                if (window.errorBug) {
+                    window.errorBug.setVisible(true);
+                    if (!window.errorBug.anims.isPlaying || window.errorBug.anims.currentAnim?.key !== 'error_bug') {
+                        window.errorBug.anims.play('error_bug', true);
+                    }
+                    window.errorBug.x = 838;
+                    window.errorBug.y = 537;
+                }
+                if (star) {
+                    star.setVisible(false);
+                    star.anims.stop();
+                }
+                if (window.starWorking) {
+                    window.starWorking.setVisible(false);
+                    window.starWorking.anims.stop();
+                }
+                isMoving = false;
+                return;
+            }
 
             // idle 时锁定位置（不走任何移动路径）
             if (effectiveState === 'idle') {
