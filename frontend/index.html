@@ -1175,7 +1175,7 @@
                 <button id="btn-state-writing" onclick="setState('writing','文档处理中')">文档处理</button>
                 <button id="btn-state-image" onclick="setState('image_gen','画图中')">画图</button>
                 <button id="btn-state-video" onclick="setState('video_gen','做视频中')">做视频</button>
-                <button id="btn-state-character" onclick="setState('character_swap','换装中')">换装</button>
+                <button id="btn-state-character" onclick="setState('dressup','换装中')">换装</button>
                 <button id="btn-state-syncing" onclick="setState('syncing','同步中')">同步</button>
                 <button id="btn-state-error" onclick="setState('error','报警中')">报警</button>
                 <button id="btn-open-drawer" onclick="toggleAssetDrawer()">装修房间</button>
@@ -1636,7 +1636,7 @@
             error: { name: '出错了', area: 'zone5' },
             drawing: { name: '画图', area: 'zone2' },
             video: { name: '做视频', area: 'zone2' },
-            dressup: { name: '换装', area: 'zone2' }
+            dressup: { name: '换装', area: 'dressup' }
         };
 
         const BUBBLE_TEXTS = {
@@ -4072,7 +4072,8 @@ function toggleBrokerPanel() {
                 error: { x: 838, y: 537 },
                 breakroom: { x: 500, y: 580 },
                 drawing: { x: 1203, y: 279 },
-                video: { x: 1194, y: 169 }
+                video: { x: 1194, y: 169 },
+                dressup: { x: 555, y: 100 }
             };
 
             // 创建 Star 角色待命动画（每次先移除旧定义，确保不复用历史动画）
@@ -4622,11 +4623,13 @@ function toggleBrokerPanel() {
 
         function normalizeState(s) {
             if (!s) return 'idle';
-            if (s === 'working') return 'writing';
-            if (s === 'run' || s === 'running') return 'executing';
-            if (s === 'sync') return 'syncing';
-            if (s === 'research') return 'researching';
-            return s;
+            const low = s.toLowerCase();
+            if (low === 'working') return 'writing';
+            if (low === 'run' || low === 'running') return 'executing';
+            if (low === 'sync') return 'syncing';
+            if (low === 'research') return 'researching';
+            if (low === 'character_swap' || low === 'dress' || low === 'outfit' || low === 'dressup') return 'dressup';
+            return low;
         }
 
         function applyVisualState(nextState) {
@@ -4674,6 +4677,12 @@ function toggleBrokerPanel() {
                 if (window.starWorking) {
                     window.starWorking.setVisible(true);
                     window.starWorking.anims.play('star_working', true);
+                    
+                    // 同步到正确区域
+                    const stateInfo = STATES[nextState] || STATES.idle;
+                    const areaPos = areas[stateInfo.area] || areas.writing;
+                    window.starWorking.x = areaPos.x;
+                    window.starWorking.y = areaPos.y;
                 }
             }
 

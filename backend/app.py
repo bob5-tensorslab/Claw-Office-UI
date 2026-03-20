@@ -79,7 +79,7 @@ STATE_TO_AREA_MAP = {
     "syncing": "writing",
     "drawing": "writing",
     "video": "writing",
-    "dressup": "writing",
+    "dressup": "dressup",
     "error": "error",
 }
 
@@ -1306,7 +1306,7 @@ def set_state_endpoint():
             return jsonify({"status": "error", "msg": "invalid json"}), 400
         state = load_state()
         if "state" in data:
-            s = data["state"]
+            s = normalize_agent_state(data["state"])
             if s in VALID_AGENT_STATES:
                 state["state"] = s
         if "detail" in data:

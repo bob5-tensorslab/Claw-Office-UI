@@ -108,7 +108,7 @@ const STATES = {
   error: { name: '出错了', area: 'error' },
   drawing: { name: '画图', area: 'writing' },
   video: { name: '做视频', area: 'writing' },
-  dressup: { name: '换装', area: 'writing' }
+  dressup: { name: '换装', area: 'dressup' }
 };
 
 const BUBBLE_TEXTS = {
@@ -257,6 +257,9 @@ const AREA_POSITIONS = {
     { x: 140, y: 250 },
     { x: 200, y: 210 },
     { x: 260, y: 260 }
+  ],
+  dressup: [
+    { x: 555, y: 100 }
   ]
 };
 
@@ -691,11 +694,13 @@ function update(time) {
 
 function normalizeState(s) {
   if (!s) return 'idle';
-  if (s === 'working') return 'writing';
-  if (s === 'run' || s === 'running') return 'executing';
-  if (s === 'sync') return 'syncing';
-  if (s === 'research') return 'researching';
-  return s;
+  const low = s.toLowerCase();
+  if (low === 'working') return 'writing';
+  if (low === 'run' || low === 'running') return 'executing';
+  if (low === 'sync') return 'syncing';
+  if (low === 'research') return 'researching';
+  if (low === 'character_swap' || low === 'dress' || low === 'outfit' || low === 'dressup') return 'dressup';
+  return low;
 }
 
 function fetchStatus() {
@@ -751,6 +756,11 @@ function fetchStatus() {
           if (window.starWorking) {
             window.starWorking.setVisible(true);
             window.starWorking.anims.play('star_working', true);
+            
+            // 默认从 LAYOUT 系统的区域配置读取坐标
+            const areaPos = areas[nextState] || areas[stateInfo.area] || areas.writing;
+            window.starWorking.x = areaPos.x;
+            window.starWorking.y = areaPos.y;
           }
         }
 
@@ -852,6 +862,13 @@ function moveStar(time) {
             if (window.starWorking) {
               window.starWorking.setVisible(true);
               window.starWorking.anims.play('star_working', true);
+              if (currentState === 'dressup') {
+                window.starWorking.x = 555;
+                window.starWorking.y = 100;
+              } else {
+                window.starWorking.x = LAYOUT.furniture.starWorking.x;
+                window.starWorking.y = LAYOUT.furniture.starWorking.y;
+              }
             }
           }
         }
@@ -879,6 +896,13 @@ function moveStar(time) {
           if (window.starWorking) {
             window.starWorking.setVisible(true);
             window.starWorking.anims.play('star_working', true);
+            if (currentState === 'dressup') {
+              window.starWorking.x = 555;
+              window.starWorking.y = 100;
+            } else {
+              window.starWorking.x = LAYOUT.furniture.starWorking.x;
+              window.starWorking.y = LAYOUT.furniture.starWorking.y;
+            }
           }
           sofa.anims.stop();
           sofa.setTexture('sofa_idle');

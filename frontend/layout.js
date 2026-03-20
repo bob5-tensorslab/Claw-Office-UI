@@ -21,7 +21,8 @@ const LAYOUT = {
     error:       { x: 838, y: 537 },
     breakroom:   { x: 500, y: 580 },
     drawing:     { x: 1203, y: 279 },
-    video:       { x: 1194, y: 169 }
+    video:       { x: 1194, y: 169 },
+    dressup:     { x: 555, y: 100 }
   },
 
   // === 装饰与家具：坐标 + 原点 + depth ===
