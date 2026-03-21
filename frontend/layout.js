@@ -15,15 +15,15 @@ const LAYOUT = {
 
   // === 各区域坐标 ===
   areas: {
-    door:        { x: 640, y: 550 },
-    writing:     { x: 810, y: 154 },
+    door: { x: 640, y: 550 },
+    writing: { x: 810, y: 154 },
     researching: { x: 810, y: 154 },
-    error:       { x: 838, y: 537 },
-    breakroom:   { x: 500, y: 580 },
-    drawing:     { x: 1150, y: 116 },
-    videoing:    { x: 120, y: 190 },
-    dressup:     { x: 555, y: 100 },
-    syncing:     { x: 1080, y: 600 }
+    error: { x: 838, y: 537 },
+    breakroom: { x: 500, y: 580 },
+    drawing: { x: 1150, y: 116 },
+    videoing: { x: 150, y: 240 },
+    dressup: { x: 590, y: 145 },
+    syncing: { x: 1140, y: 600 }
   },
 
   // === 装饰与家具：坐标 + 原点 + depth ===
@@ -100,6 +100,14 @@ const LAYOUT = {
       depth: 50,
       scale: 0.9,
       pingPong: { leftX: 838, rightX: 942, speed: 0.6 }
+    },
+
+    starVideoing: {
+      x: 150,
+      y: 240,
+      origin: { x: 0.5, y: 0.5 },
+      depth: 850,
+      scale: 1.0
     },
 
     // 同步动画

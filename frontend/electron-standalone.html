@@ -2641,7 +2641,7 @@
             const lang = (uiLang || 'zh');
             const nameMap = {
                 zh: {
-                    'star-idle-v5': '主角·待命状态',
+                    'idle': '主角·待命状态',
                     'star-working-spritesheet-grid': '主角·工作状态',
                     'sync-animation': '主角·同步状态',
                     'sync-animation-v3-grid': '主角·同步状态',
@@ -2665,7 +2665,7 @@
                     'guest_anim_6': '访客动画 6'
                 },
                 en: {
-                    'star-idle-v5': 'Main · Idle',
+                    'idle': 'Main · Idle',
                     'star-working-spritesheet-grid': 'Main · Working',
                     'sync-animation': 'Main · Syncing',
                     'sync-animation-v3-grid': 'Main · Syncing',
@@ -2689,7 +2689,7 @@
                     'guest_anim_6': 'Guest Animation 6'
                 },
                 ja: {
-                    'star-idle-v5': 'メイン・待機状態',
+                    'idle': 'メイン・待機状態',
                     'star-working-spritesheet-grid': 'メイン・作業状態',
                     'sync-animation': 'メイン・同期状態',
                     'sync-animation-v3-grid': 'メイン・同期状態',
@@ -2721,7 +2721,7 @@
             zh: {
                 'office_bg_small': '主场景底图（当前生效）。建议 1280×720（16:9），保留房间结构与视角，避免角色站位错位。',
                 'office_bg': '历史背景备份。通常不直接生效，建议与 office_bg_small 保持同构图用于回退。',
-                'star-idle-v5': '主角待机动画表。请保持 256×256 分帧与网格布局一致，否则待机动作会错帧。',
+                'idle': '主角待机动画表。请保持 256×256 分帧与网格布局一致，否则待机动作会错帧。',
                 'star-working-spritesheet-grid': '主角工作动画表（工位状态）。请保持 300×300 分帧，建议人物重心与原图一致。',
                 'sync-animation': '同步状态素材（当前引用）。建议按 256×256 帧规范制作，避免同步状态显示静止或抖动。',
                 'sync-animation-v3-grid': '同步动画表（兼容资源）。保持 256×256 网格可用于替换同步动作细节。',
@@ -2754,7 +2754,7 @@
             en: {
                 'office_bg_small': 'Primary room background (active). Use 1280×720 (16:9), keep room structure/perspective to avoid character misalignment.',
                 'office_bg': 'Legacy backup background. Usually not directly active; keep composition aligned with office_bg_small for rollback.',
-                'star-idle-v5': 'Main idle spritesheet. Keep 256×256 frame size and grid layout, or idle animation will break.',
+                'idle': 'Main idle spritesheet. Keep 256×256 frame size and grid layout, or idle animation will break.',
                 'star-working-spritesheet-grid': 'Main working spritesheet (desk state). Keep 300×300 frames; preserve visual center/anchor.',
                 'sync-animation': 'Sync-state asset (currently referenced). Follow 256×256 frame spec to avoid static/jitter sync visuals.',
                 'sync-animation-v3-grid': 'Sync spritesheet (compat resource). Keep 256×256 grid for sync animation replacement.',
@@ -2787,7 +2787,7 @@
             ja: {
                 'office_bg_small': 'メイン背景（現在有効）。1280×720（16:9）推奨。部屋構造と視点を維持し、キャラの位置ズレを防いでください。',
                 'office_bg': '旧背景のバックアップ。通常は直接反映されません。office_bg_small と同構図で保持すると復旧しやすいです。',
-                'star-idle-v5': 'メイン待機スプライトシート。256×256 分割とグリッド構成を維持しないと待機アニメが崩れます。',
+                'idle': 'メイン待機スプライトシート。256×256 分割とグリッド構成を維持しないと待機アニメが崩れます。',
                 'star-working-spritesheet-grid': 'メイン作業スプライトシート（デスク状態）。300×300 分割を維持し、重心位置を揃えてください。',
                 'sync-animation': '同期状態素材（現在参照中）。256×256 仕様を守ると静止/ガタつきを回避できます。',
                 'sync-animation-v3-grid': '同期スプライトシート（互換用）。256×256 グリッド維持で同期演出を差し替え可能です。',
@@ -2845,7 +2845,7 @@
             const stem = file.replace(/\.[^.]+$/, '');
             const map = {
                 'office_bg_small': 'office_bg',
-                'star-idle-v5': 'star_idle',
+                'idle': 'star_idle',
                 'sofa-idle-v3': 'sofa_idle',
                 'sofa-shadow-v1': 'sofa_shadow',
                 'plants-spritesheet': 'plants',
@@ -2885,7 +2885,7 @@
             if (!key) return null;
             const keyToStem = {
                 office_bg: 'office_bg_small',
-                star_idle: 'star-idle-v5',
+                star_idle: 'idle',
                 sofa_idle: 'sofa-idle-v3',
                 sofa_shadow: 'sofa-shadow-v1',
                 plants: 'plants-spritesheet',
@@ -3137,7 +3137,7 @@
             // 常见核心资产优先用显式提示（避免误判）
             const hints = [
                 [/star-working-spritesheet-grid\.webp$/, 300, 300],
-                [/star-idle-v5\.(webp|png)$/, 256, 256],
+                [/idle\.(webp|png)$/, 128, 128],
                 [/sync-animation-v3-grid\.webp$/, 256, 256],
                 [/error-bug-spritesheet-grid\.webp$/, 220, 220],
                 [/flowers-bloom-v2\.webp$/, 128, 128],
@@ -3262,7 +3262,7 @@
             const baseRows = assetListData.map(it => ({ ...it, key: '' }));
 
             const statePriority = [
-                'star-idle-v5.png',
+                'idle.webp',
                 'star-working-spritesheet-grid.webp',
                 'sync-animation-v3-grid.webp',
                 'error-bug-spritesheet-grid.webp'
@@ -4901,7 +4901,7 @@ function toggleBrokerPanel() {
             // cache-busting to avoid stale background on client/CDN
             // use smaller/new map version provided by user
             this.load.image('office_bg', '/static/office_bg_small.webp?v={{VERSION_TIMESTAMP}}');
-            this.load.spritesheet('star_idle', '/static/star-idle-v5.png?v={{VERSION_TIMESTAMP}}', { frameWidth: 256, frameHeight: 256 });
+            this.load.spritesheet('star_idle', '/static/idle.webp?v={{VERSION_TIMESTAMP}}', { frameWidth: 128, frameHeight: 128 });
 
             // Furniture
             this.load.image('sofa_idle', '/static/sofa-idle-v3.png?v={{VERSION_TIMESTAMP}}');
@@ -4976,7 +4976,8 @@ function toggleBrokerPanel() {
             };
 
             // 创建 Star 角色待命动画（每次先移除旧定义，确保不复用历史动画）
-            const starIdleFrameMax = Math.max(0, (this.textures.get('star_idle')?.frameTotal || 1) - 1);
+            const frameTotal = this.textures.get('star_idle')?.frameTotal || 1;
+            const starIdleFrameMax = Math.min(120, Math.max(0, frameTotal - 1));
             if (this.anims.exists('star_idle')) {
                 this.anims.remove('star_idle');
             }

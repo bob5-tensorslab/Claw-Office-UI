@@ -176,9 +176,9 @@ const BUBBLE_TEXTS = {
     '别怕，这种我见多了',
     '报警中：让问题自己现形'
   ],
-  drawing: ['画图中：构思色彩','正在渲染像素','上色中…不要急','调整画笔边缘','每一帧都在燃烧GPU'],
-  video: ['做视频：剪辑进行中','时间线对齐','添加转场特效','渲染序列帧','音轨同步中'],
-  dressup: ['换装中：寻找合适的搭配','这件衣服不错','穿搭灵感涌现','整理像素外观','试穿新衣服'],
+  drawing: ['画图中：构思色彩', '正在渲染像素', '上色中…不要急', '调整画笔边缘', '每一帧都在燃烧GPU'],
+  video: ['做视频：剪辑进行中', '时间线对齐', '添加转场特效', '渲染序列帧', '音轨同步中'],
+  dressup: ['换装中：寻找合适的搭配', '这件衣服不错', '穿搭灵感涌现', '整理像素外观', '试穿新衣服'],
   cat: [
     '喵~',
     '咕噜咕噜…',
@@ -259,13 +259,13 @@ const AREA_POSITIONS = {
     { x: 260, y: 260 }
   ],
   dressup: [
-    { x: 555, y: 100 }
+    { x: 590, y: 145 }
   ],
   drawing: [
     { x: 1150, y: 116 }
   ],
   videoing: [
-    { x: 120, y: 190 }
+    { x: 150, y: 240 }
   ],
   syncing: [
     { x: 1080, y: 600 }
@@ -317,7 +317,7 @@ function preload() {
   });
 
   this.load.image('office_bg', '/static/office_bg_small' + (supportsWebP ? '.webp' : '.png') + '?v={{VERSION_TIMESTAMP}}');
-  this.load.spritesheet('star_idle', '/static/star-idle-spritesheet' + getExt('star-idle-spritesheet.png'), { frameWidth: 128, frameHeight: 128 });
+  this.load.spritesheet('star_idle', '/static/star-idle-spritesheet' + getExt('star-idle-spritesheet.png'), { frameWidth: 120, frameHeight: 120 });
   this.load.spritesheet('star_researching', '/static/star-researching-spritesheet' + getExt('star-researching-spritesheet.png'), { frameWidth: 128, frameHeight: 105 });
 
   this.load.image('sofa_idle', '/static/sofa-idle' + getExt('sofa-idle.png'));
@@ -334,6 +334,7 @@ function preload() {
   this.load.spritesheet('star_working', '/static/star-working-spritesheet-grid' + (supportsWebP ? '.webp' : '.png'), { frameWidth: 230, frameHeight: 144 });
   this.load.spritesheet('sync_anim', '/static/sync-animation-spritesheet-grid' + (supportsWebP ? '.webp' : '.png'), { frameWidth: 256, frameHeight: 256 });
   this.load.image('memo_bg', '/static/memo-bg' + (supportsWebP ? '.webp' : '.png'));
+  this.load.spritesheet('star_videoing', '/static/videoing' + (supportsWebP ? '.webp' : '.png'), { frameWidth: 128, frameHeight: 128 });
 
   // 新办公桌：强制 PNG（透明）
   this.load.image('desk_v2', '/static/desk-v2.png');
@@ -518,6 +519,14 @@ function create() {
     repeat: -1
   });
 
+  const videoingFrameMax = Math.max(0, (this.textures.get('star_videoing')?.frameTotal || 1) - 1);
+  this.anims.create({
+    key: 'star_videoing',
+    frames: this.anims.generateFrameNumbers('star_videoing', { start: 0, end: Math.min(130, videoingFrameMax) }),
+    frameRate: 12,
+    repeat: -1
+  });
+
   // === 错误 bug（来自 LAYOUT）===
   const errorBug = this.add.sprite(
     LAYOUT.furniture.errorBug.x,
@@ -542,6 +551,17 @@ function create() {
   starWorking.setScale(LAYOUT.furniture.starWorking.scale);
   starWorking.setDepth(LAYOUT.furniture.starWorking.depth);
   window.starWorking = starWorking;
+
+  const starVideoing = this.add.sprite(
+    LAYOUT.furniture.starVideoing.x,
+    LAYOUT.furniture.starVideoing.y,
+    'star_videoing',
+    0
+  ).setOrigin(LAYOUT.furniture.starVideoing.origin.x, LAYOUT.furniture.starVideoing.origin.y);
+  starVideoing.setVisible(false);
+  starVideoing.setScale(LAYOUT.furniture.starVideoing.scale);
+  starVideoing.setDepth(LAYOUT.furniture.starVideoing.depth);
+  window.starVideoing = starVideoing;
 
   // === 同步动画（来自 LAYOUT）===
   this.anims.create({
@@ -741,6 +761,10 @@ function fetchStatus() {
             window.starWorking.setVisible(false);
             window.starWorking.anims.stop();
           }
+          if (window.starVideoing) {
+            window.starVideoing.setVisible(false);
+            window.starVideoing.anims.stop();
+          }
         } else if (nextState === 'error') {
           sofa.anims.stop();
           sofa.setTexture('sofa_idle');
@@ -749,6 +773,10 @@ function fetchStatus() {
           if (window.starWorking) {
             window.starWorking.setVisible(false);
             window.starWorking.anims.stop();
+          }
+          if (window.starVideoing) {
+            window.starVideoing.setVisible(false);
+            window.starVideoing.anims.stop();
           }
         } else if (nextState === 'syncing') {
           sofa.anims.stop();
@@ -759,19 +787,40 @@ function fetchStatus() {
             window.starWorking.setVisible(false);
             window.starWorking.anims.stop();
           }
+          if (window.starVideoing) {
+            window.starVideoing.setVisible(false);
+            window.starVideoing.anims.stop();
+          }
         } else {
           sofa.anims.stop();
           sofa.setTexture('sofa_idle');
           star.setVisible(false);
           star.anims.stop();
           if (window.starWorking) {
-            window.starWorking.setVisible(true);
-            window.starWorking.anims.play('star_working', true);
-            
-            // 默认从 LAYOUT 系统的区域配置读取坐标
-            const areaPos = areas[nextState] || areas[stateInfo.area] || areas.writing;
-            window.starWorking.x = areaPos.x;
-            window.starWorking.y = areaPos.y;
+            if (nextState === 'videoing') {
+              window.starWorking.setVisible(false);
+              window.starWorking.anims.stop();
+
+              if (window.starVideoing) {
+                window.starVideoing.setVisible(true);
+                window.starVideoing.anims.play('star_videoing', true);
+                const areaPos = areas[nextState] || areas[stateInfo.area] || areas.videoing;
+                window.starVideoing.x = areaPos.x;
+                window.starVideoing.y = areaPos.y;
+              }
+            } else {
+              if (window.starVideoing) {
+                window.starVideoing.setVisible(false);
+                window.starVideoing.anims.stop();
+              }
+              window.starWorking.setVisible(true);
+              window.starWorking.anims.play('star_working', true);
+
+              // 默认从 LAYOUT 系统的区域配置读取坐标
+              const areaPos = areas[nextState] || areas[stateInfo.area] || areas.writing;
+              window.starWorking.x = areaPos.x;
+              window.starWorking.y = areaPos.y;
+            }
           }
         }
 
@@ -832,6 +881,10 @@ function moveStar(time) {
       window.starWorking.setVisible(false);
       window.starWorking.anims.stop();
     }
+    if (window.starVideoing) {
+      window.starVideoing.setVisible(false);
+      window.starVideoing.anims.stop();
+    }
     isMoving = false;
     return;
   }
@@ -867,18 +920,34 @@ function moveStar(time) {
               window.starWorking.setVisible(false);
               window.starWorking.anims.stop();
             }
+            if (window.starVideoing) {
+              window.starVideoing.setVisible(false);
+              window.starVideoing.anims.stop();
+            }
           } else {
             star.setVisible(false);
             star.anims.stop();
-            if (window.starWorking) {
-              window.starWorking.setVisible(true);
-              window.starWorking.anims.play('star_working', true);
-              if (currentState === 'dressup') {
-                window.starWorking.x = 555;
-                window.starWorking.y = 100;
-              } else {
-                window.starWorking.x = LAYOUT.furniture.starWorking.x;
-                window.starWorking.y = LAYOUT.furniture.starWorking.y;
+            if (currentState === 'videoing') {
+              if (window.starWorking) { window.starWorking.setVisible(false); window.starWorking.anims.stop(); }
+              if (window.starVideoing) {
+                window.starVideoing.setVisible(true);
+                window.starVideoing.anims.play('star_videoing', true);
+                const areaPos = areas.videoing || { x: 150, y: 240 };
+                window.starVideoing.x = areaPos.x;
+                window.starVideoing.y = areaPos.y;
+              }
+            } else {
+              if (window.starVideoing) { window.starVideoing.setVisible(false); window.starVideoing.anims.stop(); }
+              if (window.starWorking) {
+                window.starWorking.setVisible(true);
+                window.starWorking.anims.play('star_working', true);
+                if (currentState === 'dressup') {
+                  window.starWorking.x = 590;
+                  window.starWorking.y = 145;
+                } else {
+                  window.starWorking.x = LAYOUT.furniture.starWorking.x;
+                  window.starWorking.y = LAYOUT.furniture.starWorking.y;
+                }
               }
             }
           }
@@ -897,6 +966,10 @@ function moveStar(time) {
             window.starWorking.setVisible(false);
             window.starWorking.anims.stop();
           }
+          if (window.starVideoing) {
+            window.starVideoing.setVisible(false);
+            window.starVideoing.anims.stop();
+          }
           if (game.textures.exists('sofa_busy')) {
             sofa.setTexture('sofa_busy');
             sofa.anims.play('sofa_busy', true);
@@ -904,15 +977,27 @@ function moveStar(time) {
         } else {
           star.setVisible(false);
           star.anims.stop();
-          if (window.starWorking) {
-            window.starWorking.setVisible(true);
-            window.starWorking.anims.play('star_working', true);
-            if (currentState === 'dressup') {
-              window.starWorking.x = 555;
-              window.starWorking.y = 100;
-            } else {
-              window.starWorking.x = LAYOUT.furniture.starWorking.x;
-              window.starWorking.y = LAYOUT.furniture.starWorking.y;
+          if (currentState === 'videoing') {
+            if (window.starWorking) { window.starWorking.setVisible(false); window.starWorking.anims.stop(); }
+            if (window.starVideoing) {
+              window.starVideoing.setVisible(true);
+              window.starVideoing.anims.play('star_videoing', true);
+              const areaPos = areas.videoing || { x: 150, y: 240 };
+              window.starVideoing.x = areaPos.x;
+              window.starVideoing.y = areaPos.y;
+            }
+          } else {
+            if (window.starVideoing) { window.starVideoing.setVisible(false); window.starVideoing.anims.stop(); }
+            if (window.starWorking) {
+              window.starWorking.setVisible(true);
+              window.starWorking.anims.play('star_working', true);
+              if (currentState === 'dressup') {
+                window.starWorking.x = 590;
+                window.starWorking.y = 145;
+              } else {
+                window.starWorking.x = LAYOUT.furniture.starWorking.x;
+                window.starWorking.y = LAYOUT.furniture.starWorking.y;
+              }
             }
           }
           sofa.anims.stop();
