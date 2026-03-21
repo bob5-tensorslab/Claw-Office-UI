@@ -104,10 +104,10 @@ const STATES = {
   writing: { name: '文档处理', area: 'writing' },
   researching: { name: '搜索信息', area: 'researching' },
   executing: { name: '执行任务', area: 'writing' },
-  syncing: { name: '同步备份', area: 'writing' },
+  syncing: { name: '同步备份', area: 'syncing' },
   error: { name: '出错了', area: 'error' },
-  drawing: { name: '画图', area: 'writing' },
-  video: { name: '做视频', area: 'writing' },
+  drawing: { name: '画图', area: 'drawing' },
+  videoing: { name: '做视频', area: 'videoing' },
   dressup: { name: '换装', area: 'dressup' }
 };
 
@@ -260,6 +260,15 @@ const AREA_POSITIONS = {
   ],
   dressup: [
     { x: 555, y: 100 }
+  ],
+  drawing: [
+    { x: 1150, y: 116 }
+  ],
+  videoing: [
+    { x: 120, y: 190 }
+  ],
+  syncing: [
+    { x: 1080, y: 600 }
   ]
 };
 
@@ -699,6 +708,8 @@ function normalizeState(s) {
   if (low === 'run' || low === 'running') return 'executing';
   if (low === 'sync') return 'syncing';
   if (low === 'research') return 'researching';
+  if (low === 'image_gen' || low === 'draw') return 'drawing';
+  if (low === 'video' || low === 'movie' || low === 'film' || low === 'edit' || low === 'video_gen' || low === 'videoing') return 'videoing';
   if (low === 'character_swap' || low === 'dress' || low === 'outfit' || low === 'dressup') return 'dressup';
   return low;
 }

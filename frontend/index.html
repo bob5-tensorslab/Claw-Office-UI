@@ -1173,8 +1173,8 @@
             <div id="control-buttons">
                 <button id="btn-state-idle" onclick="setState('idle','待命')">待命</button>
                 <button id="btn-state-writing" onclick="setState('writing','文档处理中')">文档处理</button>
-                <button id="btn-state-image" onclick="setState('image_gen','画图中')">画图</button>
-                <button id="btn-state-video" onclick="setState('video_gen','做视频中')">做视频</button>
+                <button id="btn-state-image" onclick="setState('drawing','画图中')">画图</button>
+                <button id="btn-state-video" onclick="setState('videoing','做视频中')">做视频</button>
                 <button id="btn-state-character" onclick="setState('dressup','换装中')">换装</button>
                 <button id="btn-state-syncing" onclick="setState('syncing','同步中')">同步</button>
                 <button id="btn-state-error" onclick="setState('error','报警中')">报警</button>
@@ -1632,10 +1632,10 @@
             writing: { name: '文档处理', area: 'zone2' },
             researching: { name: '搜索信息', area: 'zone3' },
             executing: { name: '执行任务', area: 'zone2' },
-            syncing: { name: '同步备份', area: 'zone4' },
+            syncing: { name: '同步备份', area: 'syncing' },
             error: { name: '出错了', area: 'zone5' },
-            drawing: { name: '画图', area: 'zone2' },
-            video: { name: '做视频', area: 'zone2' },
+            drawing: { name: '画图', area: 'drawing' },
+            videoing: { name: '做视频', area: 'videoing' },
             dressup: { name: '换装', area: 'dressup' }
         };
 
@@ -4071,9 +4071,10 @@ function toggleBrokerPanel() {
                 researching: { x: 810, y: 154 },
                 error: { x: 838, y: 537 },
                 breakroom: { x: 500, y: 580 },
-                drawing: { x: 1203, y: 279 },
-                video: { x: 1194, y: 169 },
-                dressup: { x: 555, y: 100 }
+                drawing: { x: 1150, y: 116 },
+                videoing: { x: 120, y: 190 },
+                dressup: { x: 555, y: 100 },
+                syncing: { x: 1080, y: 600 }
             };
 
             // 创建 Star 角色待命动画（每次先移除旧定义，确保不复用历史动画）
@@ -4311,7 +4312,7 @@ function toggleBrokerPanel() {
                 repeat: -1
             });
             }
-            syncAnimSprite = this.add.sprite(810, 154, 'sync_anim', 0).setOrigin(0.5);
+            syncAnimSprite = this.add.sprite(1080, 600, 'sync_anim', 0).setOrigin(0.5);
             syncAnimSprite.setDepth(40);
             syncAnimSprite.setVisible(false);
             // default show first frame only
@@ -4561,14 +4562,16 @@ function toggleBrokerPanel() {
             // Sync animation fallback logic
             if (syncAnimSprite) {
                 if (effectiveStateForServer === 'syncing') {
+                    syncAnimSprite.setVisible(true);
                     if (syncAnimPlayable && syncAnimSprite.anims && syncAnimSprite.anims.play && syncAnimSprite.scene?.anims?.exists('sync_anim')) {
-                    if (!syncAnimSprite.anims.isPlaying || syncAnimSprite.anims.currentAnim?.key !== 'sync_anim') {
-                        syncAnimSprite.anims.play('sync_anim', true);
-                    }
-                } else {
+                        if (!syncAnimSprite.anims.isPlaying || syncAnimSprite.anims.currentAnim?.key !== 'sync_anim') {
+                            syncAnimSprite.anims.play('sync_anim', true);
+                        }
+                    } else {
                         syncAnimSprite.setFrame(0);
                     }
                 } else {
+                    syncAnimSprite.setVisible(false);
                     if (syncAnimSprite.anims && syncAnimSprite.anims.isPlaying) syncAnimSprite.anims.stop();
                     syncAnimSprite.setFrame(0);
                 }
@@ -4628,6 +4631,8 @@ function toggleBrokerPanel() {
             if (low === 'run' || low === 'running') return 'executing';
             if (low === 'sync') return 'syncing';
             if (low === 'research') return 'researching';
+            if (low === 'image_gen' || low === 'draw') return 'drawing';
+            if (low === 'video' || low === 'movie' || low === 'film' || low === 'edit' || low === 'video_gen' || low === 'videoing') return 'videoing';
             if (low === 'character_swap' || low === 'dress' || low === 'outfit' || low === 'dressup') return 'dressup';
             return low;
         }
@@ -4699,6 +4704,7 @@ function toggleBrokerPanel() {
             // Sync animation logic: default frame0; syncing play loop
             if (syncAnimSprite) {
                 if (nextState === 'syncing') {
+                    syncAnimSprite.setVisible(true);
                     if (syncAnimPlayable && syncAnimSprite.anims && syncAnimSprite.anims.play && syncAnimSprite.scene?.anims?.exists('sync_anim')) {
                         if (!syncAnimSprite.anims.isPlaying || syncAnimSprite.anims.currentAnim?.key !== 'sync_anim') {
                             syncAnimSprite.anims.play('sync_anim', true);
@@ -4707,6 +4713,7 @@ function toggleBrokerPanel() {
                         syncAnimSprite.setFrame(0);
                     }
                 } else {
+                    syncAnimSprite.setVisible(false);
                     if (syncAnimSprite.anims && syncAnimSprite.anims.isPlaying) syncAnimSprite.anims.stop();
                     syncAnimSprite.setFrame(0);
                 }

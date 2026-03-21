@@ -69,16 +69,16 @@ ASSET_DEFAULTS_FILE = os.path.join(ROOT_DIR, "asset-defaults.json")
 RUNTIME_CONFIG_FILE = os.path.join(ROOT_DIR, "runtime-config.json")
 
 # Canonical agent states: single source of truth for validation and mapping
-VALID_AGENT_STATES = frozenset({"idle", "writing", "researching", "executing", "syncing", "drawing", "video", "dressup", "error"})
-WORKING_STATES = frozenset({"writing", "researching", "executing", "drawing", "video", "dressup"})  # subset used for auto-idle TTL
+VALID_AGENT_STATES = frozenset({"idle", "writing", "researching", "executing", "syncing", "drawing", "videoing", "dressup", "error"})
+WORKING_STATES = frozenset({"writing", "researching", "executing", "drawing", "videoing", "dressup"})  # subset used for auto-idle TTL
 STATE_TO_AREA_MAP = {
     "idle": "breakroom",
     "writing": "writing",
     "researching": "writing",
     "executing": "writing",
-    "syncing": "writing",
-    "drawing": "writing",
-    "video": "writing",
+    "syncing": "syncing",
+    "drawing": "drawing",
+    "videoing": "videoing",
     "dressup": "dressup",
     "error": "error",
 }
@@ -582,8 +582,8 @@ def normalize_agent_state(s):
         return 'researching'
     if s_lower in {'draw', 'drawing', 'paint', 'image', 'image_gen'}:
         return 'drawing'
-    if s_lower in {'video', 'movie', 'film', 'edit', 'video_gen'}:
-        return 'video'
+    if s_lower in {'video', 'movie', 'film', 'edit', 'video_gen', 'videoing'}:
+        return 'videoing'
     if s_lower in {'dress', 'dressup', 'outfit', 'avatar', 'character_swap', 'haracter_swap'}:
         return 'dressup'
     if s_lower in VALID_AGENT_STATES:
