@@ -4468,7 +4468,7 @@
             // Star working animation: repacked to grid to avoid WebGL max texture size limits
             // NOTE: prefer WebP for size, PNG fallback
             // 动态替换后按最新素材识别：当前 writing 素材为 300x300 单帧
-            this.load.spritesheet('star_working', '/static/star-working-spritesheet-grid.webp?v={{VERSION_TIMESTAMP}}', { frameWidth: 300, frameHeight: 300 });
+            this.load.spritesheet('star_working', '/static/document.png?v={{VERSION_TIMESTAMP}}', { frameWidth: 128, frameHeight: 128 });
             this.load.spritesheet('star_videoing', '/static/videoing' + (supportsWebP ? '.webp' : '.png') + '?v={{VERSION_TIMESTAMP}}', { frameWidth: 128, frameHeight: 128 });
             this.load.spritesheet('star_drawing', '/static/drawing' + (supportsWebP ? '.webp' : '.png') + '?v={{VERSION_TIMESTAMP}}', { frameWidth: 128, frameHeight: 128 });
             this.load.spritesheet('star_document', '/static/document.png?v={{VERSION_TIMESTAMP}}', { frameWidth: 128, frameHeight: 128 });

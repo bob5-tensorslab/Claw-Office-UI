@@ -331,7 +331,7 @@ function preload() {
   this.load.spritesheet('error_bug', '/static/error-bug-spritesheet-grid' + (supportsWebP ? '.webp' : '.png'), { frameWidth: 180, frameHeight: 180 });
   this.load.spritesheet('cats', '/static/cats-spritesheet' + (supportsWebP ? '.webp' : '.png'), { frameWidth: 160, frameHeight: 160 });
   this.load.image('desk', '/static/desk' + getExt('desk.png'));
-  this.load.spritesheet('star_working', '/static/star-working-spritesheet-grid' + (supportsWebP ? '.webp' : '.png'), { frameWidth: 230, frameHeight: 144 });
+  this.load.spritesheet('star_working', '/static/document.png', { frameWidth: 128, frameHeight: 128 });
   this.load.spritesheet('sync_anim', '/static/sync-animation-spritesheet-grid' + (supportsWebP ? '.webp' : '.png'), { frameWidth: 256, frameHeight: 256 });
   this.load.image('memo_bg', '/static/memo-bg' + (supportsWebP ? '.webp' : '.png'));
   this.load.spritesheet('star_videoing', '/static/videoing' + (supportsWebP ? '.webp' : '.png'), { frameWidth: 128, frameHeight: 128 });
@@ -506,9 +506,10 @@ function create() {
   });
 
   // === Star 在桌前工作（来自 LAYOUT）===
+  const workingFrameMax = Math.max(0, (this.textures.get('star_working')?.frameTotal || 1) - 1);
   this.anims.create({
     key: 'star_working',
-    frames: this.anims.generateFrameNumbers('star_working', { start: 0, end: 191 }),
+    frames: this.anims.generateFrameNumbers('star_working', { start: 0, end: workingFrameMax }),
     frameRate: 12,
     repeat: -1
   });
